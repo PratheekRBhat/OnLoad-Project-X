@@ -9,4 +9,12 @@
     <string name="slogan">Humanizing the world</string>
     <string name="volunteer_login">VOLUNTEER LOGIN</string>
     <string name="background">background</string>
+    <string name="hint_text">EMAIL</string>
+    <string name="hint_name">NAME</string>
+    <string name="hint_password">PASSWORD</string>
+    <string name="hint_Cpassword">CONFIRM PASSWORD</string>
+    <string name="FEMALE">FEMALE</string>
+    <string name="MALE">MALE</string>
+    <string name="Submit">SUBMIT</string>
+    <string name="gender">GENDER</string>
 </resources>
