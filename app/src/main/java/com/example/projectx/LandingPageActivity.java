@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -36,16 +37,46 @@ public class LandingPageActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseDatabase database;
     private RadioGroup gender;
-     String Gender;
+    String Gender;
     DatabaseReference user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+        Button register = findViewById(R.id.RegisterButton);
+        Button signIn = findViewById(R.id.SignInButton);
+        mAuth = FirebaseAuth.getInstance();
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LandingPageActivity.this, SignUpActivity.class);
+                startActivity(intent);
+            }
+        });
 
+        signIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LandingPageActivity.this, LoginInActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        updateUI(currentUser);
+    }
 
-
+    private void updateUI(FirebaseUser currentUser) {
+        Intent intent = new Intent(LandingPageActivity.this, LoginInActivity.class);
+        startActivity(intent);
+    }
 }
+
+
