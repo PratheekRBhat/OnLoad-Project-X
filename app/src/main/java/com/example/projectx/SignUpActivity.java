@@ -21,7 +21,6 @@ public class SignUpActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseDatabase database;
     DatabaseReference user;
-    private MaterialButton submitButton;
     private TextInputEditText emailET, nameET, phoneET, passwordET;
     private RadioGroup genderRG;
     String name, email, password, phone, gender;
@@ -35,7 +34,7 @@ public class SignUpActivity extends AppCompatActivity {
         phoneET = findViewById(R.id.phone);
         passwordET = findViewById(R.id.password);
         genderRG = findViewById(R.id.Gender_radio_group);
-        submitButton = findViewById(R.id.register_btn);
+        MaterialButton submitButton = findViewById(R.id.register_btn);
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
