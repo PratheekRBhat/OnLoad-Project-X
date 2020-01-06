@@ -18,6 +18,7 @@
     <string name="Submit">SUBMIT</string>
     <string name="gender">GENDER</string>
     <string name="hint_phone">10 DIGIT PHONE NUMBER</string>
+    <string name="login">LOGIN</string>
 
 
 </resources>

@@ -1,9 +1,12 @@
 package com.example.projectx;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.RadioButton;
@@ -11,24 +14,35 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class SignUpActivity extends AppCompatActivity {
+
+    private static final String TAG = "SignUpActivity";
     private FirebaseAuth mAuth;
     private FirebaseDatabase database;
-    DatabaseReference user;
+    DatabaseReference users;
     private TextInputEditText emailET, nameET, phoneET, passwordET;
     private RadioGroup genderRG;
     String name, email, password, phone, gender;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        mAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+        users = database.getReference("Users");
         emailET = findViewById(R.id.email);
         nameET = findViewById(R.id.full_name_et);
         phoneET = findViewById(R.id.phone);
@@ -64,11 +78,48 @@ public class SignUpActivity extends AppCompatActivity {
                     int selectedId = genderRG.getCheckedRadioButtonId();
                     RadioButton selectedRadioButton = findViewById(selectedId);
                     gender = selectedRadioButton.getText().toString();
-                    Toast.makeText(getApplicationContext(), "Success " + gender, Toast.LENGTH_SHORT).show();
+                    mAuth.createUserWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        // Sign in success, update UI with the signed-in user's information
+                                        Log.d(TAG, "createUserWithEmail:success");
+                                        FirebaseUser user = mAuth.getCurrentUser();
+                                        Users use = new Users();
+                                        use.setEmail(email);
+                                        use.setName(name);
+                                        use.setPhone(phone);
+                                        use.setPassword(password);
+                                        use.setGender(gender);
+
+                                        users.child(mAuth.getCurrentUser().getUid()).setValue(use).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+
+                                        updateUI(user);
+                                    } else {
+                                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                                        Toast.makeText(SignUpActivity.this, "Authentication failed.",
+                                                Toast.LENGTH_SHORT).show();
+                                        updateUI(null);
+                                    }
+                                }
+                            });
 
 
                 }
             }
         });
+    }
+
+    private void updateUI(FirebaseUser firebaseUser) {
+        if (firebaseUser != null) {
+            Intent intent = new Intent(SignUpActivity.this, UserActivity.class);
+            startActivity(intent);
+        }
     }
 }

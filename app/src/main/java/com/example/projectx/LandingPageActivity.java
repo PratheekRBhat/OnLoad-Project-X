@@ -32,7 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class LandingPageActivity extends AppCompatActivity {
-    private static final String TAG = "LandingPageActivity";
+
 
     private FirebaseAuth mAuth;
     private FirebaseDatabase database;
@@ -63,19 +63,23 @@ public class LandingPageActivity extends AppCompatActivity {
             }
         });
 
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
+
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
     }
 
     private void updateUI(FirebaseUser currentUser) {
-        Intent intent = new Intent(LandingPageActivity.this, LoginInActivity.class);
-        startActivity(intent);
+        if (currentUser != null) {
+            Intent intent = new Intent(LandingPageActivity.this, UserActivity.class);
+            startActivity(intent);
+        }
+
     }
 }
 
