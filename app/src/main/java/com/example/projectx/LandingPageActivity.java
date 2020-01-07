@@ -76,7 +76,7 @@ public class LandingPageActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser currentUser) {
         if (currentUser != null) {
-            Intent intent = new Intent(LandingPageActivity.this, UserActivity.class);
+            Intent intent = new Intent(LandingPageActivity.this, User_Activity.class);
             startActivity(intent);
         }
 

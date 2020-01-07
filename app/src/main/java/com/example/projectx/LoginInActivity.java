@@ -63,7 +63,7 @@ public class LoginInActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser user) {
         if (user != null) {
-            Intent intent = new Intent(LoginInActivity.this, UserActivity.class);
+            Intent intent = new Intent(LoginInActivity.this, User_Activity.class);
             startActivity(intent);
         }
     }

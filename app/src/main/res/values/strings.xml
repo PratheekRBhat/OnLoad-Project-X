@@ -19,6 +19,8 @@
     <string name="gender">GENDER</string>
     <string name="hint_phone">10 DIGIT PHONE NUMBER</string>
     <string name="login">LOGIN</string>
+    <string name="i_m_going">I\'m Going</string>
+    <string name="help">HELP</string>
 
 
 </resources>
