@@ -3,14 +3,15 @@ package com.example.projectx;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -47,6 +48,7 @@ public class User_Activity extends FragmentActivity implements OnMapReadyCallbac
         DistressSignalButton = findViewById(R.id.DistressSignal);
         AttendingButton = findViewById(R.id.attendingButton);
         linearLayout = findViewById(R.id.mapLayout);
+        loader.setVisibility(View.VISIBLE);
 
         AttendingButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,61 +65,70 @@ public class User_Activity extends FragmentActivity implements OnMapReadyCallbac
         });
 
 
-        new accountTypeAsyncTask().execute();
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Users").child(userId);
+            dbRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    Gender = dataSnapshot.child("gender").getValue(String.class);
+                    LoadUI();
+                    SetUI(Gender);
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
+        }
+
+
+
     }
 
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(-34, 151);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
+    private void LoadUI() {
+        final Handler handler = new Handler();
 
-    class accountTypeAsyncTask extends AsyncTask<Void, Void, Void> {
+// Create and start a new Thread
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    Thread.sleep(400);
+                } catch (Exception e) {
+                } // Just catch the InterruptedException
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            loader.setVisibility(View.VISIBLE);
+                // Now we use the Handler to post back to the main thread
+                handler.post(new Runnable() {
+                    public void run() {
+                        // Set the View's visibility back on the main UI Thread
 
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            loader.setVisibility(View.GONE);
-            if (Gender.equals("MALE")) {
-                linearLayout.setVisibility(View.VISIBLE);
-
-            } else if (Gender.equals("FEMALE")) {
-                linearLayout.setVisibility(View.VISIBLE);
-                DistressSignalButton.setVisibility(View.VISIBLE);
-            }
-
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Users").child(userId);
-                dbRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Gender = dataSnapshot.child("gender").getValue(String.class);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
                     }
                 });
             }
-            return null;
+        }).start();
+
+    }
+
+    private void SetUI(String aVoid) {
+        loader.setVisibility(View.INVISIBLE);
+        if (aVoid.equals("MALE")) {
+            linearLayout.setVisibility(View.VISIBLE);
+
+        } else if (aVoid.equals("FEMALE")) {
+            linearLayout.setVisibility(View.VISIBLE);
+            DistressSignalButton.setVisibility(View.VISIBLE);
         }
     }
+
+
 }
