@@ -3,6 +3,7 @@ package com.example.projectx;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +22,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import dmax.dialog.SpotsDialog;
 
 public class LoginInActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
@@ -42,16 +45,20 @@ public class LoginInActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String email = l_email.getText().toString();
                 String password = l_password.getText().toString();
+                final AlertDialog waitingDialog = new SpotsDialog(LoginInActivity.this);
+                waitingDialog.show();
                 mAuth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     FirebaseUser user = mAuth.getCurrentUser();
+                                    waitingDialog.dismiss();
                                     updateUI(user);
                                 } else {
                                     Toast.makeText(LoginInActivity.this, "Authentication failed.",
                                             Toast.LENGTH_SHORT).show();
+                                    waitingDialog.dismiss();
                                     updateUI(null);
                                 }
                             }
