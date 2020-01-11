@@ -25,6 +25,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class User_Activity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
@@ -33,15 +39,16 @@ public class User_Activity extends FragmentActivity implements OnMapReadyCallbac
         GoogleMap.OnMapLongClickListener,
         GoogleMap.OnMarkerClickListener,
         View.OnClickListener {
+
     private static final String TAG = User_Activity.class.getSimpleName();
     private GoogleMap mMap;
-    private ProgressBar loader;
-    private LinearLayout linearLayout;
-    private Button DistressSignalButton;
+    private Button DistressSignalButton, attendingButton;
     private String Gender;
     private double longitude;
     private double latitude;
     private GoogleApiClient googleApiClient;
+    private LinearLayout linearLayout;
+    private ProgressBar loader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,12 +65,13 @@ public class User_Activity extends FragmentActivity implements OnMapReadyCallbac
 
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
-        loader = findViewById(R.id.loader);
+
         DistressSignalButton = findViewById(R.id.DistressSignal);
-        Button attendingButton = findViewById(R.id.attendingButton);
+        attendingButton = findViewById(R.id.attendingButton);
         linearLayout = findViewById(R.id.mapLayout);
-        linearLayout.setVisibility(View.VISIBLE);
-        //loader.setVisibility(View.VISIBLE);
+        loader = findViewById(R.id.loader);
+
+
         attendingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,6 +87,7 @@ public class User_Activity extends FragmentActivity implements OnMapReadyCallbac
         });
     }
 
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -88,7 +97,42 @@ public class User_Activity extends FragmentActivity implements OnMapReadyCallbac
         mMap.moveCamera(CameraUpdateFactory.newLatLng(india));
         mMap.setOnMarkerDragListener(this);
         mMap.setOnMapLongClickListener(this);
+        CheckMap();
     }
+
+    private void CheckMap() {
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference userData = database.getReference("Users").child(userId);
+        userData.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Gender = dataSnapshot.child("gender").getValue(String.class);
+
+
+                if (Gender.equals("MALE")) {
+                    loader.setVisibility(View.INVISIBLE);
+                    linearLayout.setVisibility(View.VISIBLE);
+                    attendingButton.setVisibility(View.VISIBLE);
+                } else if (Gender.equals("FEMALE")) {
+                    loader.setVisibility(View.INVISIBLE);
+                    linearLayout.setVisibility(View.VISIBLE);
+                    attendingButton.setVisibility(View.VISIBLE);
+                    DistressSignalButton.setVisibility(View.VISIBLE);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+
 
     private void getCurrentLocation() {
         mMap.clear();
@@ -100,6 +144,7 @@ public class User_Activity extends FragmentActivity implements OnMapReadyCallbac
             longitude = location.getLongitude();
             latitude = location.getLatitude();
             moveMap();
+
         }
     }
 
@@ -175,7 +220,4 @@ public class User_Activity extends FragmentActivity implements OnMapReadyCallbac
         googleApiClient.disconnect();
         super.onStop();
     }
-
-
-
 }

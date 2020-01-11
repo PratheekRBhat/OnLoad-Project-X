@@ -1,12 +1,12 @@
 package com.example.projectx;
 
 public class Users {
-    private String email,password,phone,name,gender;
+    private String email, password, phone, name, gender;
 
     public Users() {
     }
 
-    public Users(String email, String password, String phone, String name,String gender) {
+    public Users(String email, String password, String phone, String name, String gender) {
         this.email = email;
         this.password = password;
         this.phone = phone;
