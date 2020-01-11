@@ -9,7 +9,7 @@ public class Volunteers {
         this.latitude = latitude;
         this.longitude = longitude;
     }
-    
+
 
     public Volunteers() {
     }
