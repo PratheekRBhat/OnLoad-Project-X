@@ -25,6 +25,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -49,6 +50,7 @@ public class User_Activity extends FragmentActivity implements OnMapReadyCallbac
     private GoogleApiClient googleApiClient;
     private LinearLayout linearLayout;
     private ProgressBar loader;
+    private DatabaseReference volunteerLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +87,8 @@ public class User_Activity extends FragmentActivity implements OnMapReadyCallbac
                 Toast.makeText(getApplicationContext(), "Help is on it's way", Toast.LENGTH_SHORT).show();
             }
         });
+
+        volunteerLocation = FirebaseDatabase.getInstance().getReference("VolunteerLocationDetails");
     }
 
 
@@ -104,7 +108,7 @@ public class User_Activity extends FragmentActivity implements OnMapReadyCallbac
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference userData = database.getReference("Users").child(userId);
+        final DatabaseReference userData = database.getReference("Users").child(userId);
         userData.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -144,6 +148,16 @@ public class User_Activity extends FragmentActivity implements OnMapReadyCallbac
             longitude = location.getLongitude();
             latitude = location.getLatitude();
             moveMap();
+            Volunteers volunteers = new Volunteers();
+            volunteers.setLatitude(latitude);
+            volunteers.setLongitude(longitude);
+            volunteerLocation.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(volunteers).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+                }
+            });
+
 
         }
     }
