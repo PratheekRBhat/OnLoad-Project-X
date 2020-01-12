@@ -6,12 +6,16 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 
 import android.os.PersistableBundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -121,6 +125,38 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         });
 
         volunteerLocation = FirebaseDatabase.getInstance().getReference("VolunteerLocationDetails");
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menus) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.user_menu, menus);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.signOut:
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(User_Activity.this, LandingPageActivity.class);
+
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+        
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finishAffinity();
+        finish();
     }
 
     @Override

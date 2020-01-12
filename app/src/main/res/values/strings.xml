@@ -21,6 +21,7 @@
     <string name="login">LOGIN</string>
     <string name="i_m_going">I\'m Going</string>
     <string name="help">HELP</string>
+    <string name="sign_out">Sign Out</string>
 
 
 </resources>
