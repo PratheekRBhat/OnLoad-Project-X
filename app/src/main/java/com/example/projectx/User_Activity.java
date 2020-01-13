@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
 import android.os.Bundle;
 
 import android.os.PersistableBundle;
@@ -46,7 +47,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 
-public class User_Activity extends AppCompatActivity implements OnMapReadyCallback {
+public class User_Activity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
 
     private static final String TAG = User_Activity.class.getSimpleName();
     private GoogleMap mMap;
@@ -71,7 +72,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
     private Location mLastKnownLocation;
 
-    // Keys for storing activity state.
+
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
 
@@ -81,7 +82,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         super.onCreate(savedInstanceState);
 
 
-        // Retrieve location and camera position from saved instance state.
         if (savedInstanceState != null) {
             mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
             mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
@@ -145,7 +145,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
-        
+
 
                 return true;
             default:
@@ -307,4 +307,25 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     }
 
 
+    @Override
+    public void onLocationChanged(Location location) {
+        Latitude = location.getLatitude();
+        Longitude = location.getLongitude();
+        
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
 }
