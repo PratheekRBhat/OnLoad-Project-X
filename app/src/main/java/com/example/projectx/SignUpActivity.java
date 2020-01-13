@@ -2,11 +2,13 @@ package com.example.projectx;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NavUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.RadioButton;
@@ -49,6 +51,7 @@ public class SignUpActivity extends AppCompatActivity {
         passwordET = findViewById(R.id.password);
         genderRG = findViewById(R.id.Gender_radio_group);
         MaterialButton submitButton = findViewById(R.id.register_btn);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,5 +124,14 @@ public class SignUpActivity extends AppCompatActivity {
             Intent intent = new Intent(SignUpActivity.this, User_Activity.class);
             startActivity(intent);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            NavUtils.navigateUpFromSameTask(this);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -2,11 +2,14 @@ package com.example.projectx;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NavUtils;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -37,6 +40,10 @@ public class LoginInActivity extends AppCompatActivity {
         final TextInputEditText l_email = findViewById(R.id.login_email);
         final TextInputEditText l_password = findViewById(R.id.login_password);
         MaterialButton login_btn = findViewById(R.id.Login_btn);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         mAuth = FirebaseAuth.getInstance();
         login_btn.setOnClickListener(new View.OnClickListener() {
@@ -73,4 +80,14 @@ public class LoginInActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            NavUtils.navigateUpFromSameTask(this);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

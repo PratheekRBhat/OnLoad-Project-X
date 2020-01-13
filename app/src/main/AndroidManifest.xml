@@ -40,11 +40,14 @@
 
         <activity
             android:name=".LoginInActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/RegularPages"
+            android:label="LOGIN"
+            android:parentActivityName=".LandingPageActivity" />
         <activity
             android:name=".SignUpActivity"
             android:label="REGISTER"
-            android:theme="@style/RegularPages" />
+            android:theme="@style/RegularPages"
+            android:parentActivityName=".LandingPageActivity" />
         <activity android:name=".LandingPageActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
