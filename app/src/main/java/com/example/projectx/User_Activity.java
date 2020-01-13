@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -63,6 +64,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
     private static final float DEFAULT_ZOOM = 18.04f;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+
     private boolean mLocationPermissionGranted;
     private double Latitude, Longitude;
     private String Gender;
@@ -166,7 +168,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         loader.setVisibility(View.INVISIBLE);
-        mMap.setMyLocationEnabled(true);
+
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
         // Prompt the user for permission.
@@ -232,12 +234,17 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
          */
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mLocationPermissionGranted = true;
+            mMap.setMyLocationEnabled(true);
         } else {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+            ActivityCompat.requestPermissions(this, new String[]{
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+            mMap.setMyLocationEnabled(true);
         }
     }
 
