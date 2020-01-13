@@ -46,6 +46,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Objects;
+
 
 public class User_Activity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
 
@@ -55,11 +57,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
     private LinearLayout linearLayout;
     private ProgressBar loader;
-    private DatabaseReference volunteerLocation;
-
-
-    private CameraPosition mCameraPosition;
-    private PlacesClient mPlacesClient;
 
 
     private FusedLocationProviderClient mFusedLocationProviderClient;
@@ -84,7 +81,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
         if (savedInstanceState != null) {
             mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
-            mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
+            CameraPosition mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
         }
 
         setContentView(R.layout.activity_user_);
@@ -94,7 +91,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                 .findFragmentById(R.id.map);
         // Construct a PlacesClient
         Places.initialize(getApplicationContext(), getString(R.string.google_maps_key));
-        mPlacesClient = Places.createClient(this);
+        PlacesClient mPlacesClient = Places.createClient(this);
 
         // Construct a FusedLocationProviderClient.
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -124,7 +121,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             }
         });
 
-        volunteerLocation = FirebaseDatabase.getInstance().getReference("VolunteerLocationDetails");
+
     }
 
     @Override
@@ -137,20 +134,17 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
+        if (item.getItemId() == R.id.signOut) {
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(User_Activity.this, LandingPageActivity.class);
 
-            case R.id.signOut:
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(User_Activity.this, LandingPageActivity.class);
-
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
 
 
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -205,7 +199,8 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                                                 mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
                                 Latitude = mLastKnownLocation.getLatitude();
                                 Longitude = mLastKnownLocation.getLongitude();
-                                CheckMap(Latitude, Longitude);
+                                CheckMap();
+                                writeToFirebaseDatabase(Latitude, Longitude);
                                 LatLng sydney = new LatLng(-Latitude, Longitude);
                                 mMap.addMarker(new MarkerOptions().position(sydney)
                                         .title("You"));
@@ -225,7 +220,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
             }
         } catch (SecurityException e) {
-            Log.e("Exception: %s", e.getMessage());
+            Log.e("Exception: %s", Objects.requireNonNull(e.getMessage()));
         }
     }
 
@@ -273,12 +268,12 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                 getLocationPermission();
             }
         } catch (SecurityException e) {
-            Log.e("Exception: %s", e.getMessage());
+            Log.e("Exception: %s", Objects.requireNonNull(e.getMessage()));
         }
     }
 
 
-    private void CheckMap(Double latitude, Double Longitude) {
+    private void CheckMap() {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -311,7 +306,16 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     public void onLocationChanged(Location location) {
         Latitude = location.getLatitude();
         Longitude = location.getLongitude();
-        
+        writeToFirebaseDatabase(Latitude, Longitude);
+    }
+
+    private void writeToFirebaseDatabase(Double latitude, Double longitude) {
+        Volunteers volunteers = new Volunteers();
+        volunteers.setLongitude(longitude);
+        volunteers.setLatitude(latitude);
+
+        DatabaseReference volunteersReference = FirebaseDatabase.getInstance().getReference("Volunteer Location Details");
+        volunteersReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(volunteers);
     }
 
     @Override
