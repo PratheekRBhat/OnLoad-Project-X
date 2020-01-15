@@ -155,7 +155,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
 
-                if (key.equals(FirebaseAuth.getInstance().getCurrentUser().getUid()) && !volunteerFound) {
+                if (!key.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
                     volunteerFound = true;
                     volunteerFoundID = key;
                     Toast.makeText(getApplicationContext(), "Help is on it's way :" + volunteerFoundID, Toast.LENGTH_SHORT).show();
@@ -223,7 +223,8 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         loader.setVisibility(View.INVISIBLE);
-
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
+        googleMap.getUiSettings().setRotateGesturesEnabled(true);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
         // Prompt the user for permission.
