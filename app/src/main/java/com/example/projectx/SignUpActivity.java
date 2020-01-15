@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -51,7 +52,11 @@ public class SignUpActivity extends AppCompatActivity {
         passwordET = findViewById(R.id.password);
         genderRG = findViewById(R.id.Gender_radio_group);
         MaterialButton submitButton = findViewById(R.id.register_btn);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override

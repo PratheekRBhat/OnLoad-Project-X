@@ -155,9 +155,12 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
 
+                if (key.equals(FirebaseAuth.getInstance().getCurrentUser().getUid()) && !volunteerFound) {
+                    volunteerFound = true;
+                    volunteerFoundID = key;
+                    Toast.makeText(getApplicationContext(), "Help is on it's way :" + volunteerFoundID, Toast.LENGTH_SHORT).show();
 
-                volunteerFoundID = key;
-                Toast.makeText(getApplicationContext(), "Help is on it's way :" + volunteerFoundID, Toast.LENGTH_SHORT).show();
+                }
 
             }
 
