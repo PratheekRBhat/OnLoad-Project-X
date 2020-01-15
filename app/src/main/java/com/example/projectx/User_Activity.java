@@ -25,6 +25,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -314,6 +316,11 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         Latitude = location.getLatitude();
         Longitude = location.getLongitude();
         writeToFirebaseDatabase(Latitude, Longitude);
+
+        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Volunteer Location Details");
+        GeoFire geoFire = new GeoFire(ref);
+        geoFire.setLocation(userID, new GeoLocation(Latitude, Longitude));
     }
 
     private void writeToFirebaseDatabase(Double latitude, Double longitude) {
