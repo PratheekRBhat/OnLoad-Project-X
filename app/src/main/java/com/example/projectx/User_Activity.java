@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 
 import android.os.PersistableBundle;
@@ -30,6 +31,7 @@ import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -81,6 +83,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     private int radius = 1;
     private boolean volunteerFound = false;
     private String volunteerFoundID;
+
 
 
     @Override
@@ -145,7 +148,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
 
     private void findVolunteers() {
-        DatabaseReference findVolunteer = FirebaseDatabase.getInstance().getReference("Volunteer Location Details");
+        DatabaseReference findVolunteer = FirebaseDatabase.getInstance().getReference("LocationData");
         GeoFire geoFire = new GeoFire(findVolunteer);
         getDeviceLocation();
         GeoQuery findVol = geoFire.queryAtLocation(new GeoLocation(Latitude, Longitude), radius);
@@ -154,14 +157,11 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         findVol.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-
-                if (!key.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                if (!volunteerFound && key != FirebaseAuth.getInstance().getCurrentUser().getUid()) {
                     volunteerFound = true;
                     volunteerFoundID = key;
                     Toast.makeText(getApplicationContext(), "Help is on it's way :" + volunteerFoundID, Toast.LENGTH_SHORT).show();
-
                 }
-
             }
 
             @Override
@@ -177,7 +177,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             @Override
             public void onGeoQueryReady() {
                 if (!volunteerFound) {
-                    radius++;
+                    radius += 10;
                     findVolunteers();
                 }
             }
@@ -259,7 +259,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                                 Longitude = mLastKnownLocation.getLongitude();
                                 CheckMap();
                                 writeToFirebaseDatabase(Latitude, Longitude);
-                                LatLng sydney = new LatLng(-Latitude, Longitude);
+                                LatLng sydney = new LatLng(Latitude, Longitude);
                                 mMap.addMarker(new MarkerOptions().position(sydney)
                                         .title("You"));
                             }
@@ -370,17 +370,25 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     public void onLocationChanged(Location location) {
         Latitude = location.getLatitude();
         Longitude = location.getLongitude();
+        LatLng latLng = new LatLng(Latitude, Longitude);
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(17));
         writeToFirebaseDatabase(Latitude, Longitude);
-        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     }
 
     private void writeToFirebaseDatabase(Double latitude, Double longitude) {
-        Volunteers volunteers = new Volunteers();
-        volunteers.setLongitude(longitude);
-        volunteers.setLatitude(latitude);
-        DatabaseReference volunteersReference = FirebaseDatabase.getInstance().getReference("Volunteer Location Details");
-        volunteersReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(volunteers);
+        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("LocationData");
+        GeoFire geoFire = new GeoFire(ref);
+        geoFire.setLocation(userID, new GeoLocation(latitude, longitude));
+
+//        Volunteers volunteers = new Volunteers();
+//        volunteers.setLongitude(longitude);
+//        volunteers.setLatitude(latitude);
+//        DatabaseReference volunteersReference = FirebaseDatabase.getInstance().getReference("Volunteer Location Details");
+//        volunteersReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(volunteers);
+//
     }
 
     @Override
