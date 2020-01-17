@@ -27,6 +27,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -63,7 +65,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     private static final String TAG = "volunteerLocation";
     private GoogleMap mMap;
     private Button DistressSignalButton, attendingButton;
-
+    private RequestQueue mRequestQueue;
     private LinearLayout linearLayout;
     private ProgressBar loader;
 
@@ -131,11 +133,9 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             @Override
             public void onClick(View v) {
                 findVolunteers();
-
-
             }
         });
-
+        mRequestQueue = Volley.newRequestQueue(this);
 
     }
 
