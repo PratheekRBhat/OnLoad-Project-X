@@ -77,7 +77,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
     private boolean mLocationPermissionGranted;
     private double Latitude, Longitude;
-    private String Gender, UserName, PhoneNumber;
+    private String Gender, UserName, PhoneNumber, userID;
 
     private Location mLastKnownLocation;
 
@@ -100,6 +100,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         }
 
         setContentView(R.layout.activity_user_);
+        userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -375,15 +376,21 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         LatLng latLng = new LatLng(Latitude, Longitude);
         mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(17));
-        writeToFirebaseDatabase(Latitude, Longitude);
+        updateLocationInRealtime(Latitude, Longitude);
+
 
     }
 
     private void writeToFirebaseDatabase(Double latitude, Double longitude) {
-        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("LocationData");
         GeoFire geoFire = new GeoFire(ref);
         geoFire.setLocation(userID, new GeoLocation(latitude, longitude));
+    }
+
+    private void updateLocationInRealtime(Double latitude, Double longitude) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        ref.child("https://project-x-b7828.firebaseio.com/LocationData/" + userID + "/l/0").setValue(latitude);
+        ref.child("https://project-x-b7828.firebaseio.com/LocationData/" + userID + "/l/1").setValue(longitude);
     }
 
     @Override
