@@ -59,7 +59,6 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:text="@string/signUp"
-            android:background="@drawable/register_btn_background"
             android:id="@+id/RegisterButton" />
 
         <Button
@@ -67,7 +66,6 @@
             android:layout_height="wrap_content"
             android:text="@string/signIN"
             android:layout_marginStart="5dp"
-            android:background="@drawable/register_btn_background"
             android:id="@+id/SignInButton" />
 
 
