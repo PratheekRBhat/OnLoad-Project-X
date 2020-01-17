@@ -4,17 +4,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
+import androidx.work.Data;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
-
-import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
-
 import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.Menu;
@@ -25,39 +25,28 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
-
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
-
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-
 import com.google.android.gms.maps.model.MarkerOptions;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.auth.FirebaseAuth;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 
 public class User_Activity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
@@ -65,10 +54,8 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     private static final String TAG = "volunteerLocation";
     private GoogleMap mMap;
     private Button DistressSignalButton, attendingButton;
-    private RequestQueue mRequestQueue;
     private LinearLayout linearLayout;
     private ProgressBar loader;
-
 
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
@@ -77,8 +64,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
     private boolean mLocationPermissionGranted;
     private double Latitude, Longitude;
-    private String Gender, UserName, PhoneNumber, userID;
-
+    private String Gender, userID;
     private Location mLastKnownLocation;
 
 
@@ -88,7 +74,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     private boolean volunteerFound = false;
     private String volunteerFoundID;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,18 +81,16 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
         if (savedInstanceState != null) {
             mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
-            CameraPosition mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
+//            CameraPosition mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
         }
 
         setContentView(R.layout.activity_user_);
-        userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
 
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        // Construct a PlacesClient
-        Places.initialize(getApplicationContext(), getString(R.string.google_maps_key));
-        PlacesClient mPlacesClient = Places.createClient(this);
+
 
         // Construct a FusedLocationProviderClient.
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -116,12 +99,14 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
 
+
         DistressSignalButton = findViewById(R.id.DistressSignal);
         attendingButton = findViewById(R.id.attendingButton);
         linearLayout = findViewById(R.id.mapLayout);
         loader = findViewById(R.id.loader);
         linearLayout.setVisibility(View.VISIBLE);
-
+        DistressSignalButton.setVisibility(View.VISIBLE);
+        userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         attendingButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,9 +121,10 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                 findVolunteers();
             }
         });
-        mRequestQueue = Volley.newRequestQueue(this);
+
 
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menus) {
@@ -147,7 +133,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         inflater.inflate(R.menu.user_menu, menus);
         return true;
     }
-
 
     private void findVolunteers() {
         DatabaseReference findVolunteer = FirebaseDatabase.getInstance().getReference("LocationData");
@@ -159,10 +144,9 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         findVol.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                if (!volunteerFound && !key.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                if (!volunteerFound && !key.equals(userID)) {
                     volunteerFound = true;
                     volunteerFoundID = key;
-                    // Toast.makeText(getApplicationContext(), "Help is on it's way :" + volunteerFoundID, Toast.LENGTH_SHORT).show();
                     getUserDetails(volunteerFoundID);
 
 
@@ -264,9 +248,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                                 Longitude = mLastKnownLocation.getLongitude();
                                 CheckMap();
                                 writeToFirebaseDatabase(Latitude, Longitude);
-                                LatLng sydney = new LatLng(Latitude, Longitude);
-                                //mMap.addMarker(new MarkerOptions().position(sydney)
-                                //  .title("You"));
                             }
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
@@ -301,11 +282,14 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             mLocationPermissionGranted = true;
             mMap.setMyLocationEnabled(true);
         } else {
+
             ActivityCompat.requestPermissions(this, new String[]{
                             Manifest.permission.ACCESS_FINE_LOCATION,
                             Manifest.permission.ACCESS_COARSE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
             mMap.setMyLocationEnabled(true);
+
+
         }
     }
 
@@ -317,6 +301,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 mLocationPermissionGranted = true;
+//                startLocationWorker();
             }
         }
         updateLocationUI();
@@ -340,10 +325,9 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         }
     }
 
-
     private void CheckMap() {
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        final DatabaseReference userData = FirebaseDatabase.getInstance().getReference("Users").child(userId);
+
+        final DatabaseReference userData = FirebaseDatabase.getInstance().getReference("Users").child(userID);
         userData.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -352,12 +336,12 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                     loader.setVisibility(View.INVISIBLE);
                     linearLayout.setVisibility(View.VISIBLE);
                     attendingButton.setVisibility(View.VISIBLE);
-                    DistressSignalButton.setVisibility(View.VISIBLE);
+
                 } else if (Gender.equals("FEMALE")) {
                     loader.setVisibility(View.INVISIBLE);
                     linearLayout.setVisibility(View.VISIBLE);
                     attendingButton.setVisibility(View.VISIBLE);
-                    DistressSignalButton.setVisibility(View.VISIBLE);
+
                 }
             }
 
@@ -367,7 +351,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             }
         });
     }
-
 
     @Override
     public void onLocationChanged(Location location) {
@@ -413,17 +396,13 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                UserName = dataSnapshot.child("name").getValue(String.class);
-                PhoneNumber = dataSnapshot.child("phone").getValue(String.class);
+                String UserName = dataSnapshot.child("name").getValue(String.class);
+                String PhoneNumber = dataSnapshot.child("phone").getValue(String.class);
                 Toast.makeText(getApplicationContext(), " " + UserName + " " + PhoneNumber, Toast.LENGTH_SHORT).show();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
-
     }
-
-
 }
