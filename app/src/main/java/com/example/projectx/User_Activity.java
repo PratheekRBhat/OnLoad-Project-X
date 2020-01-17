@@ -161,7 +161,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                 if (!volunteerFound && !key.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
                     volunteerFound = true;
                     volunteerFoundID = key;
-                    //Toast.makeText(getApplicationContext(), "Help is on it's way :" + volunteerFoundID, Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(getApplicationContext(), "Help is on it's way :" + volunteerFoundID, Toast.LENGTH_SHORT).show();
                     getUserDetails(volunteerFoundID);
 
 
@@ -181,7 +181,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             @Override
             public void onGeoQueryReady() {
                 if (!volunteerFound) {
-                    radius += 10;
+                    radius += 1;
                     findVolunteers();
                 }
             }
@@ -413,7 +413,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
 
