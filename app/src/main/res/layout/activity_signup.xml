@@ -29,10 +29,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/app_name"
-            android:textSize="48sp"
+            android:textSize="50sp"
             android:textColor="#000000"
             android:textAlignment="center"
-
             />
 
         <TextView
@@ -40,7 +39,7 @@
             android:layout_height="wrap_content"
             android:text="@string/slogan"
             android:textColor="#000001"
-            android:textSize="16sp"
+            android:textSize="20sp"
             android:textStyle="italic" />
 
 
@@ -56,15 +55,19 @@
         android:layout_alignParentBottom="true">
 
         <Button
-            android:layout_width="150dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/signUp"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
             android:id="@+id/RegisterButton" />
 
         <Button
-            android:layout_width="150dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/signIN"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
             android:layout_marginStart="5dp"
             android:id="@+id/SignInButton" />
 
