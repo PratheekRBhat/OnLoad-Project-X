@@ -194,8 +194,9 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.signOut) {
             FirebaseAuth.getInstance().signOut();
+            DatabaseReference loggedOutUserLocationData = FirebaseDatabase.getInstance().getReference("LocationData").child(userID);
+            loggedOutUserLocationData.removeValue();
             Intent intent = new Intent(User_Activity.this, LandingPageActivity.class);
-
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
 
@@ -383,9 +384,9 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     private void updateLocationInRealtime(Double latitude, Double longitude) {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        ref.child("https://project-x-b7828.firebaseio.com/LocationData/" + userID + "/l/0").setValue(latitude);
-        ref.child("https://project-x-b7828.firebaseio.com/LocationData/" + userID + "/l/1").setValue(longitude);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("LocationData").child("" + userID);
+        ref.child("/l/0").setValue(latitude);
+        ref.child("/l/1").setValue(longitude);
     }
 
     @Override
