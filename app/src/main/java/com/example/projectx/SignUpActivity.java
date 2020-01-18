@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -51,7 +52,7 @@ public class SignUpActivity extends AppCompatActivity {
         phoneET = findViewById(R.id.phone);
         passwordET = findViewById(R.id.password);
         genderRG = findViewById(R.id.Gender_radio_group);
-        MaterialButton submitButton = findViewById(R.id.register_btn);
+        Button submitButton = findViewById(R.id.register_btn);
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);

@@ -5,77 +5,87 @@
     android:layout_height="match_parent"
     tools:context=".LoginInActivity">
 
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    <ImageView
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_alignParentTop="true"
-        android:id="@+id/logo"
-        android:src="@drawable/login_logo"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
-        android:contentDescription="@string/logo" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/emailLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/logo"
-        android:layout_marginTop="70dp">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/welcomescreen"
+            android:scaleType="centerCrop"
+            android:alpha="0.7"
+            android:contentDescription="@string/background" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/login_email"
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100dp"
+            android:contentDescription="@string/logo"
+            android:src="@drawable/login_logo" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/emailLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:ems="10"
-            android:gravity="center_vertical"
-            android:hint="@string/hint_email"
-            android:inputType="textPersonName"
-            android:paddingStart="25dp"
-            android:paddingEnd="25dp" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_below="@id/logo"
+            android:layout_marginTop="70dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/login_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:ems="10"
+                android:gravity="center_vertical"
+                android:hint="@string/hint_email"
+                android:inputType="textPersonName"
+                android:paddingStart="25dp"
+                android:paddingEnd="25dp" />
+        </com.google.android.material.textfield.TextInputLayout>
 
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/passwordLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/emailLayout">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/login_password"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/passwordLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:ems="10"
-            android:gravity="center_vertical"
-            android:hint="@string/password_hint"
-            android:inputType="textPassword"
-            android:paddingStart="25dp"
-            android:paddingEnd="25dp"
+            android:layout_below="@id/emailLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/login_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:ems="10"
+                android:gravity="center_vertical"
+                android:hint="@string/password_hint"
+                android:inputType="textPassword"
+                android:paddingStart="25dp"
+                android:paddingEnd="25dp"
 
 
-            />
+                />
 
-        <Button
-            android:layout_below="@id/passwordLayout"
-            android:id="@+id/Login_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:text="@string/login"
-            android:paddingLeft="40dp"
-            android:paddingRight="40dp"
-            android:textAllCaps="false"
-            android:textColor="#ffffff"
-            android:textSize="20sp"
-            android:layout_gravity="center_horizontal" />
+            <Button
+                android:id="@+id/Login_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/passwordLayout"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="25dp"
+                android:paddingLeft="40dp"
+                android:paddingRight="40dp"
+                android:text="@string/login"
+                android:textAllCaps="false"
+                android:textColor="#ffffff"
+                android:textSize="20sp" />
 
-    </com.google.android.material.textfield.TextInputLayout>
-</RelativeLayout>
+        </com.google.android.material.textfield.TextInputLayout>
+    </RelativeLayout>
 
 
 </ScrollView>

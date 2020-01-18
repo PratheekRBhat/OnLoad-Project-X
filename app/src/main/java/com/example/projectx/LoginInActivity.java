@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,7 +40,7 @@ public class LoginInActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login_in);
         final TextInputEditText l_email = findViewById(R.id.login_email);
         final TextInputEditText l_password = findViewById(R.id.login_password);
-        MaterialButton login_btn = findViewById(R.id.Login_btn);
+        Button login_btn = findViewById(R.id.Login_btn);
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
