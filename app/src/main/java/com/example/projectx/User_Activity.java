@@ -122,9 +122,21 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             }
         });
 
+        WorkManager.getInstance(this).cancelAllWork();
+        if (mLocationPermissionGranted) {
+            startLocationWorker();
+        }
+
 
     }
 
+    private void startLocationWorker() {
+        Data workerData = new Data.Builder().putString("uid", userID).build();
+        PeriodicWorkRequest workRequest = new PeriodicWorkRequest
+                .Builder(LocationWorker.class, 15, TimeUnit.MINUTES)
+                .setInputData(workerData).build();
+        WorkManager.getInstance(this).enqueue(workRequest);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menus) {
@@ -301,7 +313,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 mLocationPermissionGranted = true;
-//                startLocationWorker();
+                startLocationWorker();
             }
         }
         updateLocationUI();
