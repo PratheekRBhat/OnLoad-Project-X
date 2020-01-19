@@ -13,7 +13,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.util.Log;
@@ -25,6 +24,14 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -45,6 +52,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.JsonObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -53,7 +68,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
     private static final String TAG = "volunteerLocation";
     private GoogleMap mMap;
-    private Button DistressSignalButton, attendingButton;
+    private Button attendingButton;
     private LinearLayout linearLayout;
     private ProgressBar loader;
 
@@ -64,7 +79,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
     private boolean mLocationPermissionGranted;
     private double Latitude, Longitude;
-    private String Gender, userID;
+    public String Gender, userID;
     private Location mLastKnownLocation;
 
 
@@ -73,6 +88,10 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     private int radius = 1;
     private boolean volunteerFound = false;
     private String volunteerFoundID;
+
+    private RequestQueue requestQueue;
+    private String URL = "https://fcm.googleapis.com/fcm/send";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,13 +119,15 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         mapFragment.getMapAsync(this);
 
 
-        DistressSignalButton = findViewById(R.id.DistressSignal);
+        Button distressSignalButton = findViewById(R.id.DistressSignal);
         attendingButton = findViewById(R.id.attendingButton);
         linearLayout = findViewById(R.id.mapLayout);
         loader = findViewById(R.id.loader);
         linearLayout.setVisibility(View.VISIBLE);
-        DistressSignalButton.setVisibility(View.VISIBLE);
+        distressSignalButton.setVisibility(View.VISIBLE);
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        requestQueue = Volley.newRequestQueue(this);
+        FirebaseMessaging.getInstance().subscribeToTopic(userID);
 
         attendingButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,7 +136,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             }
         });
 
-        DistressSignalButton.setOnClickListener(new View.OnClickListener() {
+        distressSignalButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 findVolunteers();
@@ -159,7 +180,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                 if (!volunteerFound && !key.equals(userID)) {
                     volunteerFound = true;
                     volunteerFoundID = key;
-                    getUserDetails(volunteerFoundID);
+                    sendNotification(volunteerFoundID, location.latitude, location.longitude);
 
 
                 }
@@ -404,18 +425,44 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
     }
 
-    private void getUserDetails(String key) {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(key);
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String UserName = dataSnapshot.child("name").getValue(String.class);
-                String PhoneNumber = dataSnapshot.child("phone").getValue(String.class);
-                Toast.makeText(getApplicationContext(), " " + UserName + " " + PhoneNumber, Toast.LENGTH_SHORT).show();
+    private void sendNotification(final String key, final Double latitude, final Double longitude) {
+
+        JSONObject mainObj = new JSONObject();
+        try {
+            mainObj.put("to", "/topics/" + key);
+            JSONObject notificationObject = new JSONObject();
+            notificationObject.put("title", "Emergency");
+            notificationObject.put("body", " " + latitude + " " + longitude);
+            mainObj.put("notification", notificationObject);
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, URL,
+                    mainObj,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Toast.makeText(getApplicationContext(), "" + key + " " + latitude + " " + longitude, Toast.LENGTH_LONG).show();
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
             }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
+            ) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> header = new HashMap<>();
+                    header.put("content-type", "application/json");
+                    header.put("authorization", "key=AIzaSyA-spthIkyVNryk0TVAFUqTvRenjeP3FeI");
+                    return header;
+                }
+            };
+            requestQueue.add(jsonObjectRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
     }
+
+
 }
