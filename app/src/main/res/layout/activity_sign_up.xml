@@ -5,13 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".SignUpActivity">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/welcomescreen"
-        android:scaleType="centerCrop"
-        android:alpha="0.7"
-        android:contentDescription="@string/background" />
 
     <ScrollView
         android:layout_width="match_parent"

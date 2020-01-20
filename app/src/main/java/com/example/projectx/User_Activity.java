@@ -43,6 +43,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -87,10 +88,11 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     private static final String KEY_LOCATION = "location";
     private int radius = 1;
     private boolean volunteerFound = false;
-    private String volunteerFoundID;
+    private String volunteerFoundID, destinationLatitude, destinationLongitude;
 
     private RequestQueue requestQueue;
     private String URL = "https://fcm.googleapis.com/fcm/send";
+    private boolean helping = false;
 
 
     @Override
@@ -144,9 +146,10 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         });
         Intent intent = getIntent();
         if (intent.hasExtra("DLatitude")) {
-            String destinationLatitude = intent.getStringExtra("DLatitude");
-            String destinationLongitude = intent.getStringExtra("DLongitude");
+            destinationLatitude = intent.getStringExtra("DLatitude");
+            destinationLongitude = intent.getStringExtra("DLongitude");
             Toast.makeText(this, "" + destinationLatitude + " " + destinationLongitude, Toast.LENGTH_SHORT).show();
+            helping = true;
             createDistressSignalLocationOnMap(destinationLatitude, destinationLatitude);
         }
         WorkManager.getInstance(this).cancelAllWork();
@@ -254,7 +257,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         googleMap.getUiSettings().setZoomControlsEnabled(true);
         googleMap.getUiSettings().setRotateGesturesEnabled(true);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
         // Prompt the user for permission.
         getLocationPermission();
 
@@ -263,6 +265,10 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
         // Get the current location of the device and set the position of the map.
         getDeviceLocation();
+
+        if (helping) {
+            createDistressSignalLocationOnMap(destinationLatitude, destinationLongitude);
+        }
     }
 
     private void getDeviceLocation() {
@@ -270,6 +276,8 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
          * Get the best and most recent location of the device, which may be null in rare
          * cases when a location is not available.
          */
+
+
         try {
             if (mLocationPermissionGranted) {
                 Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
@@ -479,12 +487,17 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     private void createDistressSignalLocationOnMap(String dLatitude, String dLongitude) {
-        Toast.makeText(this, "" + dLatitude + " " + dLongitude, Toast.LENGTH_SHORT).show();
-        double dLat = Double.valueOf(dLatitude);
-        double dLong = Double.valueOf(dLatitude);
-        Toast.makeText(this, "" + dLat + " " + dLong, Toast.LENGTH_LONG).show();
-        // mMap.addMarker(new MarkerOptions().position(new LatLng(dLat, dLong))
-        // .title("Destination"));
+        final double dLat = Double.valueOf(dLatitude);
+        final double dLong = Double.valueOf(dLongitude);
+        LatLng latLng = new LatLng(dLat, dLong);
+
+        Toast.makeText(this, "" + latLng, Toast.LENGTH_LONG).show();
+        try {
+            mMap.addMarker(new MarkerOptions().position(latLng).title("Destination"));
+        } catch (Exception e) {
+            Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+
 
     }
 
