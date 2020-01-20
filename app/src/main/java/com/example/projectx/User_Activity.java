@@ -7,7 +7,6 @@ import androidx.core.content.ContextCompat;
 import androidx.work.Data;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -24,7 +23,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -43,7 +41,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -54,11 +51,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
-
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -69,7 +63,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
     private static final String TAG = "volunteerLocation";
     private GoogleMap mMap;
-    private Button attendingButton;
     private LinearLayout linearLayout;
     private ProgressBar loader;
 
@@ -83,13 +76,12 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     public String Gender, userID;
     private Location mLastKnownLocation;
 
-
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
     private int radius = 1;
     private boolean volunteerFound = false;
-    private String volunteerFoundID, destinationLatitude, destinationLongitude;
 
+    private String volunteerFoundID, destinationLatitude, destinationLongitude;
     private RequestQueue requestQueue;
     private String URL = "https://fcm.googleapis.com/fcm/send";
     private boolean helping = false;
@@ -122,7 +114,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
 
         Button distressSignalButton = findViewById(R.id.DistressSignal);
-        attendingButton = findViewById(R.id.attendingButton);
         linearLayout = findViewById(R.id.mapLayout);
         loader = findViewById(R.id.loader);
         linearLayout.setVisibility(View.VISIBLE);
@@ -131,16 +122,12 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         requestQueue = Volley.newRequestQueue(this);
         FirebaseMessaging.getInstance().subscribeToTopic(userID);
 
-        attendingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Thank you", Toast.LENGTH_SHORT).show();
-            }
-        });
+
 
         distressSignalButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 findVolunteers();
             }
         });
@@ -148,7 +135,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         if (intent.hasExtra("DLatitude")) {
             destinationLatitude = intent.getStringExtra("DLatitude");
             destinationLongitude = intent.getStringExtra("DLongitude");
-            Toast.makeText(this, "" + destinationLatitude + " " + destinationLongitude, Toast.LENGTH_SHORT).show();
+
             helping = true;
             createDistressSignalLocationOnMap(destinationLatitude, destinationLatitude);
         }
@@ -176,6 +163,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     private void findVolunteers() {
+        Toast.makeText(this, "Help is on its way", Toast.LENGTH_SHORT).show();
         DatabaseReference findVolunteer = FirebaseDatabase.getInstance().getReference("LocationData");
         GeoFire geoFire = new GeoFire(findVolunteer);
         getDeviceLocation();
@@ -382,12 +370,12 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                 if (Gender.equals("MALE")) {
                     loader.setVisibility(View.INVISIBLE);
                     linearLayout.setVisibility(View.VISIBLE);
-                    attendingButton.setVisibility(View.VISIBLE);
+
 
                 } else if (Gender.equals("FEMALE")) {
                     loader.setVisibility(View.INVISIBLE);
                     linearLayout.setVisibility(View.VISIBLE);
-                    attendingButton.setVisibility(View.VISIBLE);
+
 
                 }
             }
@@ -403,8 +391,8 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     public void onLocationChanged(Location location) {
         Latitude = location.getLatitude();
         Longitude = location.getLongitude();
-        LatLng latLng = new LatLng(Latitude, Longitude);
-        mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+        LatLng source = new LatLng(Latitude, Longitude);
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(source));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(17));
         updateLocationInRealtime(Latitude, Longitude);
 
@@ -440,7 +428,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
     private void sendNotification(final String key, final Double latitude, final Double longitude) {
         Toast.makeText(this, "" + latitude + " " + longitude, Toast.LENGTH_SHORT).show();
-        String notificationChannelId = "DistressSignalAlert";
+
         String Lat = String.valueOf(latitude);
         String Long = String.valueOf(longitude);
 
@@ -461,7 +449,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            Toast.makeText(getApplicationContext(), "" + key + " " + latitude + " " + longitude, Toast.LENGTH_LONG).show();
                         }
                     }, new Response.ErrorListener() {
                 @Override
@@ -489,11 +476,10 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     private void createDistressSignalLocationOnMap(String dLatitude, String dLongitude) {
         final double dLat = Double.valueOf(dLatitude);
         final double dLong = Double.valueOf(dLongitude);
-        LatLng latLng = new LatLng(dLat, dLong);
-
-        Toast.makeText(this, "" + latLng, Toast.LENGTH_LONG).show();
+        LatLng destination = new LatLng(dLat, dLong);
         try {
-            mMap.addMarker(new MarkerOptions().position(latLng).title("Destination"));
+            mMap.addMarker(new MarkerOptions().position(destination).title("Destination"));
+
         } catch (Exception e) {
             Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_LONG).show();
         }
