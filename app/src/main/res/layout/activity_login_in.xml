@@ -5,13 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".LoginInActivity">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:alpha="0.7"
-        android:contentDescription="@string/background"
-        android:scaleType="centerCrop"
-        android:src="@drawable/welcomescreen" />
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -28,6 +22,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="100dp"
+                android:src="@drawable/login_logo"
                 android:contentDescription="@string/logo" />
 
             <com.google.android.material.textfield.TextInputLayout

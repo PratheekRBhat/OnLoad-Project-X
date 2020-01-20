@@ -53,7 +53,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.gson.JsonObject;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -142,14 +142,19 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                 findVolunteers();
             }
         });
-
+        Intent intent = getIntent();
+        if (intent.hasExtra("DLatitude")) {
+            String destinationLatitude = intent.getStringExtra("DLatitude");
+            String destinationLongitude = intent.getStringExtra("DLongitude");
+            Toast.makeText(this, "" + destinationLatitude + " " + destinationLongitude, Toast.LENGTH_SHORT).show();
+            createDistressSignalLocationOnMap(destinationLatitude, destinationLatitude);
+        }
         WorkManager.getInstance(this).cancelAllWork();
         if (mLocationPermissionGranted) {
             startLocationWorker();
         }
-
-
     }
+
 
     private void startLocationWorker() {
         Data workerData = new Data.Builder().putString("uid", userID).build();
@@ -426,14 +431,23 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     private void sendNotification(final String key, final Double latitude, final Double longitude) {
+        Toast.makeText(this, "" + latitude + " " + longitude, Toast.LENGTH_SHORT).show();
+        String notificationChannelId = "DistressSignalAlert";
+        String Lat = String.valueOf(latitude);
+        String Long = String.valueOf(longitude);
 
         JSONObject mainObj = new JSONObject();
         try {
             mainObj.put("to", "/topics/" + key);
             JSONObject notificationObject = new JSONObject();
-            notificationObject.put("title", "Emergency");
-            notificationObject.put("body", " " + latitude + " " + longitude);
+            notificationObject.put("title", "Emergency Alert");
+            notificationObject.put("body", " " + latitude + "/ " + longitude);
+            JSONObject locationData = new JSONObject();
+            locationData.put("Latitude", Lat);
+            locationData.put("Longitude", Long);
+
             mainObj.put("notification", notificationObject);
+            mainObj.put("data", locationData);
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, URL,
                     mainObj,
                     new Response.Listener<JSONObject>() {
@@ -461,6 +475,16 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             e.printStackTrace();
         }
 
+
+    }
+
+    private void createDistressSignalLocationOnMap(String dLatitude, String dLongitude) {
+        Toast.makeText(this, "" + dLatitude + " " + dLongitude, Toast.LENGTH_SHORT).show();
+        double dLat = Double.valueOf(dLatitude);
+        double dLong = Double.valueOf(dLatitude);
+        Toast.makeText(this, "" + dLat + " " + dLong, Toast.LENGTH_LONG).show();
+        // mMap.addMarker(new MarkerOptions().position(new LatLng(dLat, dLong))
+        // .title("Destination"));
 
     }
 
