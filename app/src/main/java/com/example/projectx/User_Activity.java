@@ -45,7 +45,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -61,7 +60,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -494,7 +492,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                     .travelMode(AbstractRouting.TravelMode.DRIVING)
                     .withListener(this)
                     .alternativeRoutes(false)
-                    .waypoints(new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()), destination)
+                    .waypoints(new LatLng(Latitude, Longitude), destination)
                     .build();
             routing.execute();
 
@@ -525,14 +523,12 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
         for (int i = 0; i < route.size(); i++) {
             int colorIndex = i % COLORS.length;
-
             PolylineOptions polyOptions = new PolylineOptions();
             polyOptions.color(getResources().getColor(COLORS[colorIndex]));
             polyOptions.width(10 + i * 3);
             polyOptions.addAll(route.get(i).getPoints());
             Polyline polyline = mMap.addPolyline(polyOptions);
             polylines.add(polyline);
-
             Toast.makeText(getApplicationContext(), "Route " + (i + 1) + ": distance - " + route.get(i).getDistanceValue() + ": duration - " + route.get(i).getDurationValue(), Toast.LENGTH_SHORT).show();
         }
 
