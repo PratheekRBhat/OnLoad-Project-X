@@ -22,6 +22,7 @@
     <string name="i_m_going">I\'m Going</string>
     <string name="help">SEND DISTRESS SIGNAL</string>
     <string name="sign_out">Sign Out</string>
+    <string name="new_user_sign_up">New User? Sign Up</string>
 
 
 </resources>

@@ -380,12 +380,9 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                     loader.setVisibility(View.INVISIBLE);
                     linearLayout.setVisibility(View.VISIBLE);
 
-
                 } else if (Gender.equals("FEMALE")) {
                     loader.setVisibility(View.INVISIBLE);
                     linearLayout.setVisibility(View.VISIBLE);
-
-
                 }
             }
 

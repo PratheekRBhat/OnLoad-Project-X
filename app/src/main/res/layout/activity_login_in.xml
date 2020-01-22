@@ -63,25 +63,34 @@
                     android:inputType="textPassword"
                     android:paddingStart="25dp"
                     android:paddingEnd="25dp"
-
-
                     />
-
-                <Button
-                    android:id="@+id/Login_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/passwordLayout"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="25dp"
-                    android:paddingLeft="40dp"
-                    android:paddingRight="40dp"
-                    android:text="@string/login"
-                    android:textAllCaps="false"
-                    android:textColor="#ffffff"
-                    android:textSize="20sp" />
-
             </com.google.android.material.textfield.TextInputLayout>
+
+
+            <Button
+                android:id="@+id/Login_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/passwordLayout"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:paddingLeft="40dp"
+                android:paddingRight="40dp"
+                android:text="@string/login"
+                android:textAllCaps="false"
+                android:textColor="#ffffff"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/new_user_sign_up"
+                android:layout_below="@id/Login_btn"
+                android:textSize="20sp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:id="@+id/signUpLink" />
         </RelativeLayout>
     </ScrollView>
 
