@@ -10,6 +10,7 @@ import androidx.work.WorkManager;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
@@ -42,8 +43,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -53,6 +54,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.maps.DirectionsApi;
+import com.google.maps.DirectionsApiRequest;
+import com.google.maps.GeoApiContext;
+import com.google.maps.model.DirectionsLeg;
+import com.google.maps.model.DirectionsResult;
+import com.google.maps.model.DirectionsRoute;
+import com.google.maps.model.DirectionsStep;
+import com.google.maps.model.EncodedPolyline;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
@@ -132,7 +142,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         distressSignalButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 findVolunteers();
             }
         });
@@ -140,7 +149,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         if (intent.hasExtra("DLatitude")) {
             destinationLatitude = intent.getStringExtra("DLatitude");
             destinationLongitude = intent.getStringExtra("DLongitude");
-
             helping = true;
             createDistressSignalLocationOnMap(destinationLatitude, destinationLatitude);
         }
@@ -261,7 +269,9 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
         if (helping) {
             createDistressSignalLocationOnMap(destinationLatitude, destinationLongitude);
+
         }
+
     }
 
     private void getDeviceLocation() {
@@ -374,11 +384,10 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                 Gender = dataSnapshot.child("gender").getValue(String.class);
                 if (Gender.equals("MALE")) {
                     loader.setVisibility(View.INVISIBLE);
-                    linearLayout.setVisibility(View.VISIBLE);
+                    //distressSignalButton.setVisibility(View.INVISIBLE);
 
                 } else if (Gender.equals("FEMALE")) {
                     loader.setVisibility(View.INVISIBLE);
-                    linearLayout.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -430,7 +439,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
     private void sendNotification(final String key, final Double latitude, final Double longitude) {
         Toast.makeText(this, "" + latitude + " " + longitude, Toast.LENGTH_SHORT).show();
-        linearLayout.setVisibility(View.GONE);
         String Lat = String.valueOf(latitude);
         String Long = String.valueOf(longitude);
 
@@ -480,12 +488,70 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         final double dLat = Double.valueOf(dLatitude);
         final double dLong = Double.valueOf(dLongitude);
         LatLng destination = new LatLng(dLat, dLong);
+        LatLng source = new LatLng(Latitude, Longitude);
         try {
             mMap.addMarker(new MarkerOptions().position(destination).title("Destination"));
+            mMap.addMarker(new MarkerOptions().position(source).title("You are here"));
+            //Define list to get all latlng for the route
+            List<LatLng> path = new ArrayList<>();
+            //Execute Directions API request
+            GeoApiContext context = new GeoApiContext.Builder()
+                    .apiKey("AIzaSyBrPt88vvoPDDn_imh-RzCXl5Ha2F2LYig")
+                    .build();
+            DirectionsApiRequest req = DirectionsApi.getDirections(context, "41.385064,2.173403", "40.416775,-3.70379");
+            try {
+                DirectionsResult res = req.await();
 
+                //Loop through legs and steps to get encoded poly lines of each step
+                if (res.routes != null && res.routes.length > 0) {
+                    DirectionsRoute route = res.routes[0];
+
+                    if (route.legs != null) {
+                        for (int i = 0; i < route.legs.length; i++) {
+                            DirectionsLeg leg = route.legs[i];
+                            if (leg.steps != null) {
+                                for (int j = 0; j < leg.steps.length; j++) {
+                                    DirectionsStep step = leg.steps[j];
+                                    if (step.steps != null && step.steps.length > 0) {
+                                        for (int k = 0; k < step.steps.length; k++) {
+                                            DirectionsStep step1 = step.steps[k];
+                                            EncodedPolyline points1 = step1.polyline;
+                                            if (points1 != null) {
+                                                //Decode polyline and add points to list of route coordinates
+                                                List<com.google.maps.model.LatLng> coords1 = points1.decodePath();
+                                                for (com.google.maps.model.LatLng coord1 : coords1) {
+                                                    path.add(new LatLng(coord1.lat, coord1.lng));
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        EncodedPolyline points = step.polyline;
+                                        if (points != null) {
+                                            //Decode polyline and add points to list of route coordinates
+                                            List<com.google.maps.model.LatLng> coOrds = points.decodePath();
+                                            for (com.google.maps.model.LatLng coOrd : coOrds) {
+                                                path.add(new LatLng(coOrd.lat, coOrd.lng));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+                Log.e(TAG, ex.getLocalizedMessage());
+            }
+            //Draw the polyline
+            if (path.size() > 0) {
+                PolylineOptions opts = new PolylineOptions().addAll(path).color(Color.BLUE).width(5);
+                mMap.addPolyline(opts);
+            }
+            mMap.getUiSettings().setZoomControlsEnabled(true);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(source, 6));
 
         } catch (Exception e) {
-            Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
 

@@ -43,7 +43,7 @@ public class LocationWorker extends Worker {
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            e.getMessage();
         }
 
         return Result.success();
