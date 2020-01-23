@@ -30,11 +30,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.directions.route.AbstractRouting;
-import com.directions.route.Route;
-import com.directions.route.RouteException;
-import com.directions.route.Routing;
-import com.directions.route.RoutingListener;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -48,7 +43,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -68,12 +63,13 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 
-public class User_Activity extends AppCompatActivity implements OnMapReadyCallback, LocationListener, RoutingListener {
+public class User_Activity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
 
     private static final String TAG = "volunteerLocation";
     private GoogleMap mMap;
     private LinearLayout linearLayout;
     private ProgressBar loader;
+    private Button distressSignalButton;
 
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
@@ -122,7 +118,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         mapFragment.getMapAsync(this);
 
 
-        Button distressSignalButton = findViewById(R.id.DistressSignal);
+        distressSignalButton = findViewById(R.id.DistressSignal);
         linearLayout = findViewById(R.id.mapLayout);
         loader = findViewById(R.id.loader);
         linearLayout.setVisibility(View.VISIBLE);
@@ -131,7 +127,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         requestQueue = Volley.newRequestQueue(this);
         FirebaseMessaging.getInstance().subscribeToTopic(userID);
 
-        polylines = new ArrayList<>();
+
 
         distressSignalButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -434,7 +430,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
     private void sendNotification(final String key, final Double latitude, final Double longitude) {
         Toast.makeText(this, "" + latitude + " " + longitude, Toast.LENGTH_SHORT).show();
-
+        linearLayout.setVisibility(View.GONE);
         String Lat = String.valueOf(latitude);
         String Long = String.valueOf(longitude);
 
@@ -480,18 +476,13 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     private void createDistressSignalLocationOnMap(String dLatitude, String dLongitude) {
+        distressSignalButton.setVisibility(View.GONE);
         final double dLat = Double.valueOf(dLatitude);
         final double dLong = Double.valueOf(dLongitude);
         LatLng destination = new LatLng(dLat, dLong);
         try {
             mMap.addMarker(new MarkerOptions().position(destination).title("Destination"));
-            Routing routing = new Routing.Builder()
-                    .travelMode(AbstractRouting.TravelMode.DRIVING)
-                    .withListener(this)
-                    .alternativeRoutes(false)
-                    .waypoints(new LatLng(Latitude, Longitude), destination)
-                    .build();
-            routing.execute();
+
 
         } catch (Exception e) {
             Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -500,39 +491,8 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
     }
 
-    private List<Polyline> polylines;
-    private static final int[] COLORS = new int[]{R.color.primary_dark_material_light};
 
 
-    @Override
-    public void onRoutingFailure(RouteException e) {
 
-    }
 
-    @Override
-    public void onRoutingStart() {
-
-    }
-
-    @Override
-    public void onRoutingSuccess(ArrayList<Route> route, int shortestRouteIndex) {
-        polylines = new ArrayList<>();
-
-        for (int i = 0; i < route.size(); i++) {
-            int colorIndex = i % COLORS.length;
-            PolylineOptions polyOptions = new PolylineOptions();
-            polyOptions.color(getResources().getColor(COLORS[colorIndex]));
-            polyOptions.width(10 + i * 3);
-            polyOptions.addAll(route.get(i).getPoints());
-            Polyline polyline = mMap.addPolyline(polyOptions);
-            polylines.add(polyline);
-            Toast.makeText(getApplicationContext(), "Route " + (i + 1) + ": distance - " + route.get(i).getDistanceValue() + ": duration - " + route.get(i).getDurationValue(), Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    @Override
-    public void onRoutingCancelled() {
-
-    }
 }

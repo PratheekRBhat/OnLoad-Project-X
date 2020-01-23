@@ -40,6 +40,7 @@
                     android:ems="10"
                     android:gravity="center_vertical"
                     android:hint="@string/hint_email"
+                    android:textColorHint="@color/colorPrimary"
                     android:inputType="textPersonName"
                     android:paddingStart="25dp"
                     android:paddingEnd="25dp" />
@@ -56,6 +57,7 @@
                     android:id="@+id/login_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColorHint="@color/colorPrimary"
                     android:layout_marginTop="20dp"
                     android:ems="10"
                     android:gravity="center_vertical"
