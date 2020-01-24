@@ -189,7 +189,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                 if (!volunteerFound && !key.equals(userID)) {
                     volunteerFound = true;
                     volunteerFoundID = key;
-                    sendNotification(volunteerFoundID, location.latitude, location.longitude);
+                    sendNotification(volunteerFoundID, Latitude, Longitude);
 
 
                 }
@@ -553,12 +553,5 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         } catch (Exception e) {
             Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-
-
     }
-
-
-
-
-
 }
