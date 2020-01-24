@@ -65,13 +65,12 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
     private static final String TAG = "volunteerLocation";
     private GoogleMap mMap;
-    private LinearLayout linearLayout;
     private ProgressBar loader;
     private Button distressSignalButton;
 
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
-    private static final float DEFAULT_ZOOM = 18.04f;
+    private static final float DEFAULT_ZOOM = 16;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
 
     private boolean mLocationPermissionGranted;
@@ -117,7 +116,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
 
         distressSignalButton = findViewById(R.id.DistressSignal);
-        linearLayout = findViewById(R.id.mapLayout);
+        LinearLayout linearLayout = findViewById(R.id.mapLayout);
         loader = findViewById(R.id.loader);
         linearLayout.setVisibility(View.VISIBLE);
         distressSignalButton.setVisibility(View.VISIBLE);
