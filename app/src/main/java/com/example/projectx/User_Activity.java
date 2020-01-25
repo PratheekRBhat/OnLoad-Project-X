@@ -11,8 +11,10 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+
 import android.location.Location;
 import android.location.LocationListener;
+
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.util.Log;
@@ -41,9 +43,13 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -61,12 +67,13 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 
-public class User_Activity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
+public class User_Activity extends AppCompatActivity implements OnMapReadyCallback, LocationListener,TaskLoadedCallback {
 
     private static final String TAG = "volunteerLocation";
     private GoogleMap mMap;
     private ProgressBar loader;
     private Button distressSignalButton;
+    private Polyline currentPolyline;
 
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
@@ -102,7 +109,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         setContentView(R.layout.activity_user_);
 
 
-
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
 
@@ -123,7 +129,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         requestQueue = Volley.newRequestQueue(this);
         FirebaseMessaging.getInstance().subscribeToTopic(userID);
-
 
 
         distressSignalButton.setOnClickListener(new View.OnClickListener() {
@@ -477,11 +482,19 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         final double dLong = Double.valueOf(dLongitude);
         LatLng destination = new LatLng(dLat, dLong);
         LatLng source = new LatLng(Latitude, Longitude);
+        mMap.addMarker(new MarkerOptions().position(destination).title("Destination"));
+        mMap.addMarker(new MarkerOptions().position(source).title("You are here"));
+        String url = getUrl(destination,source);
+        new FetchURL(User_Activity.this).execute(url,"driving");
+    }
 
-            mMap.addMarker(new MarkerOptions().position(destination).title("Destination"));
-            mMap.addMarker(new MarkerOptions().position(source).title("You are here"));
-
-
+    private String getUrl(LatLng destination, LatLng source) {
+        String org = "origin="+source.latitude+","+source.longitude;
+        String dest = "destination="+destination.latitude+","+destination.longitude;
+        String mode = "mode="+ "Driving";
+        String parameters = org+"&"+dest+"&"+mode;
+        String output = "json";
+        return " https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getString(R.string.google_api_key);
     }
 
     private void setMapStyle(GoogleMap map) {
@@ -498,5 +511,12 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         } catch (Resources.NotFoundException e) {
             Log.e(TAG, "Can't find style. Error: ", e);
         }
+    }
+
+    @Override
+    public void onTaskDone(Object... values) {
+        if (currentPolyline != null)
+            currentPolyline.remove();
+        currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
     }
 }
