@@ -7,11 +7,11 @@ import androidx.core.content.ContextCompat;
 import androidx.work.Data;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
+
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-
 import android.location.Location;
 import android.location.LocationListener;
 
@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -33,6 +34,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.projectx.DirectionHelpers.FetchURL;
+import com.example.projectx.DirectionHelpers.TaskLoadedCallback;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -47,7 +50,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
-
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -59,21 +61,23 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
+
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 
-public class User_Activity extends AppCompatActivity implements OnMapReadyCallback, LocationListener,TaskLoadedCallback {
+public class User_Activity extends AppCompatActivity implements OnMapReadyCallback, LocationListener, TaskLoadedCallback {
 
     private static final String TAG = "volunteerLocation";
     private GoogleMap mMap;
     private ProgressBar loader;
     private Button distressSignalButton;
-    private Polyline currentPolyline;
 
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
@@ -94,6 +98,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     private RequestQueue requestQueue;
     private String URL = "https://fcm.googleapis.com/fcm/send";
     private boolean helping = false;
+    private Polyline currentPolyline;
 
 
     @Override
@@ -142,12 +147,13 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             destinationLatitude = intent.getStringExtra("DLatitude");
             destinationLongitude = intent.getStringExtra("DLongitude");
             helping = true;
-            createDistressSignalLocationOnMap(destinationLatitude, destinationLatitude);
         }
         WorkManager.getInstance(this).cancelAllWork();
         if (mLocationPermissionGranted) {
             startLocationWorker();
         }
+
+
     }
 
 
@@ -221,8 +227,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             Intent intent = new Intent(User_Activity.this, LandingPageActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-
-
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -261,6 +265,8 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         getDeviceLocation();
 
         if (helping) {
+            mMap.addMarker(new MarkerOptions().position(new LatLng(Double.valueOf(destinationLatitude), Double.valueOf(destinationLongitude))).title("destination"));
+            mMap.addMarker(new MarkerOptions().position(new LatLng(Latitude, Longitude)).title("source"));
             createDistressSignalLocationOnMap(destinationLatitude, destinationLongitude);
 
         }
@@ -272,8 +278,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
          * Get the best and most recent location of the device, which may be null in rare
          * cases when a location is not available.
          */
-
-
         try {
             if (mLocationPermissionGranted) {
                 Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
@@ -479,22 +483,21 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     private void createDistressSignalLocationOnMap(String dLatitude, String dLongitude) {
         distressSignalButton.setVisibility(View.GONE);
         final double dLat = Double.valueOf(dLatitude);
-        final double dLong = Double.valueOf(dLongitude);
+        final double dLong =Double.valueOf(dLongitude);
         LatLng destination = new LatLng(dLat, dLong);
         LatLng source = new LatLng(Latitude, Longitude);
-        mMap.addMarker(new MarkerOptions().position(destination).title("Destination"));
-        mMap.addMarker(new MarkerOptions().position(source).title("You are here"));
-        String url = getUrl(destination,source);
-        new FetchURL(User_Activity.this).execute(url,"driving");
+        String url = getUrl(destination, source);
+        new FetchURL(User_Activity.this).execute(url, "driving");
     }
 
+
     private String getUrl(LatLng destination, LatLng source) {
-        String org = "origin="+source.latitude+","+source.longitude;
-        String dest = "destination="+destination.latitude+","+destination.longitude;
-        String mode = "mode="+ "Driving";
-        String parameters = org+"&"+dest+"&"+mode;
+        String org = "origin=" + source.latitude + "," + source.longitude;
+        String dest = "destination=" + destination.latitude + "," + destination.longitude;
+        String mode = "mode=" + "Driving";
+        String parameters = org + "&" + dest + "&" + mode;
         String output = "json";
-        return " https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getString(R.string.google_api_key);
+        return " https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getString(R.string.google_maps_key);
     }
 
     private void setMapStyle(GoogleMap map) {
@@ -504,7 +507,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             boolean success = map.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
                             this, R.raw.map_style));
-
             if (!success) {
                 Log.e(TAG, "Style parsing failed.");
             }
@@ -513,10 +515,13 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         }
     }
 
+
     @Override
     public void onTaskDone(Object... values) {
+
         if (currentPolyline != null)
             currentPolyline.remove();
         currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
     }
 }
+

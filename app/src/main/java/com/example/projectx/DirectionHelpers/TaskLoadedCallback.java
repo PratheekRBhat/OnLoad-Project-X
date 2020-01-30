@@ -1,4 +1,5 @@
 package com.example.projectx.DirectionHelpers;
 
-interface TaskLoadedCallback {
+public interface TaskLoadedCallback {
+    void onTaskDone(Object... values);
 }
