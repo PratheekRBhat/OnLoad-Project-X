@@ -60,16 +60,24 @@ public class LandingPageActivity extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LandingPageActivity.this, SignUpActivity.class);
-                startActivity(intent);
+                if(mLocationPermissionGranted){
+                    Intent intent = new Intent(LandingPageActivity.this, SignUpActivity.class);
+                    startActivity(intent);
+                } else {
+                    getLocationPermission();
+                }
             }
         });
 
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LandingPageActivity.this, LoginInActivity.class);
-                startActivity(intent);
+               if(mLocationPermissionGranted){
+                   Intent intent = new Intent(LandingPageActivity.this, LoginInActivity.class);
+                   startActivity(intent);
+               } else{
+                   getLocationPermission();
+               }
             }
         });
         getLocationPermission();
