@@ -149,6 +149,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), "Help is on its way", Toast.LENGTH_SHORT).show();
                         findVolunteers();
                     }
                 });
@@ -192,7 +193,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     }
 
      void findVolunteers() {
-        Toast.makeText(this, "Help is on its way", Toast.LENGTH_SHORT).show();
         DatabaseReference findVolunteer = FirebaseDatabase.getInstance().getReference("LocationData");
         GeoFire geoFire = new GeoFire(findVolunteer);
         getDeviceLocation();
@@ -202,12 +202,16 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         findVol.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                if (!volunteerFound && !key.equals(userID) || (volunteerFound && noOfVolunteers<2)) {
-                    volunteerFound = true;
-                    volunteerFoundID = key;
-                    noOfVolunteers++;
-                    sendNotification(volunteerFoundID, Latitude, Longitude);
-                    findVolunteers();
+                if (!volunteerFound && !key.equals(userID)) {
+                    if(noOfVolunteers <= 2){
+                        volunteerFoundID = key;
+                        noOfVolunteers++;
+                        sendNotification(volunteerFoundID, Latitude, Longitude);
+                        findVolunteers();
+                    }
+                    else {
+                        volunteerFound = true;
+                    }
                 }
             }
 
@@ -453,7 +457,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     private void sendNotification(final String key, final Double latitude, final Double longitude) {
-        Toast.makeText(this, key, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this," "+ latitude+"/"+longitude, Toast.LENGTH_SHORT).show();
         String Lat = String.valueOf(latitude);
         String Long = String.valueOf(longitude);
 
