@@ -1,6 +1,7 @@
 package com.example.projectx;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -9,6 +10,7 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -137,11 +139,26 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         requestQueue = Volley.newRequestQueue(this);
         FirebaseMessaging.getInstance().subscribeToTopic(userID);
 
-
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         distressSignalButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                findVolunteers();
+                builder.setTitle("Confirm Your Request");
+                builder.setMessage("Kindly confirm your request for help");
+                builder.setCancelable(false);
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        findVolunteers();
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), "Its ok", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                builder.show();
             }
         });
         Intent intent = getIntent();
