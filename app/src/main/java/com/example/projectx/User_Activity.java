@@ -100,6 +100,8 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     private boolean helping = false;
     private Polyline currentPolyline;
 
+    public int noOfVolunteers = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -184,12 +186,12 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         findVol.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                if (!volunteerFound && !key.equals(userID)) {
+                if (!volunteerFound && !key.equals(userID) || (volunteerFound && noOfVolunteers<2)) {
                     volunteerFound = true;
                     volunteerFoundID = key;
+                    noOfVolunteers++;
                     sendNotification(volunteerFoundID, Latitude, Longitude);
-
-
+                    findVolunteers();
                 }
             }
 
