@@ -102,6 +102,8 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     private boolean helping = false;
     private Polyline currentPolyline;
 
+    public int noOfVolunteers = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,7 +175,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
     }
 
-
     private void startLocationWorker() {
         Data workerData = new Data.Builder().putString("uid", userID).build();
         PeriodicWorkRequest workRequest = new PeriodicWorkRequest
@@ -190,7 +191,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         return true;
     }
 
-    private void findVolunteers() {
+     void findVolunteers() {
         Toast.makeText(this, "Help is on its way", Toast.LENGTH_SHORT).show();
         DatabaseReference findVolunteer = FirebaseDatabase.getInstance().getReference("LocationData");
         GeoFire geoFire = new GeoFire(findVolunteer);
@@ -201,12 +202,12 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         findVol.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                if (!volunteerFound && !key.equals(userID)) {
+                if (!volunteerFound && !key.equals(userID) || (volunteerFound && noOfVolunteers<2)) {
                     volunteerFound = true;
                     volunteerFoundID = key;
+                    noOfVolunteers++;
                     sendNotification(volunteerFoundID, Latitude, Longitude);
-
-
+                    findVolunteers();
                 }
             }
 
@@ -452,7 +453,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     private void sendNotification(final String key, final Double latitude, final Double longitude) {
-        Toast.makeText(this, "" + latitude + " " + longitude, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, key, Toast.LENGTH_SHORT).show();
         String Lat = String.valueOf(latitude);
         String Long = String.valueOf(longitude);
 
