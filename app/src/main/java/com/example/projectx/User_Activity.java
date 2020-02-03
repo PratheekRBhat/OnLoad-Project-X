@@ -17,6 +17,7 @@ import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationListener;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.util.Log;
@@ -25,8 +26,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -88,8 +92,9 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
     private boolean mLocationPermissionGranted;
     private double Latitude, Longitude;
-    public String Gender, userID;
+    public String Gender, userID,Name,Phone_number ;
     private Location mLastKnownLocation;
+    private  String VName ,Vphone;
 
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
@@ -103,6 +108,9 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     private Polyline currentPolyline;
 
     public int noOfVolunteers = 0;
+    private RelativeLayout callLayout;
+    private TextView vname,vphone;
+    private ImageButton callButton;
 
 
     @Override
@@ -129,28 +137,36 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
 
-
         distressSignalButton = findViewById(R.id.DistressSignal);
-        LinearLayout linearLayout = findViewById(R.id.mapLayout);
+        final LinearLayout linearLayout = findViewById(R.id.mapLayout);
+        callLayout = findViewById(R.id.call);
         loader = findViewById(R.id.loader);
+
         linearLayout.setVisibility(View.VISIBLE);
         distressSignalButton.setVisibility(View.VISIBLE);
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         requestQueue = Volley.newRequestQueue(this);
-        FirebaseMessaging.getInstance().subscribeToTopic(userID);
 
+        FirebaseMessaging.getInstance().subscribeToTopic(userID);
+        vname = findViewById(R.id.Volunteer_name);
+        vphone = findViewById(R.id.Volunteer_phone);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        callButton = findViewById(R.id.callButton);
+
         distressSignalButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 builder.setTitle("Confirm Your Request");
                 builder.setMessage("Kindly confirm your request for help");
                 builder.setCancelable(false);
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        linearLayout.setVisibility(View.GONE);
                         Toast.makeText(getApplicationContext(), "Help is on its way", Toast.LENGTH_SHORT).show();
                         findVolunteers();
+
                     }
                 });
                 builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -203,15 +219,11 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
                 if (!volunteerFound && !key.equals(userID)) {
-                    if(noOfVolunteers <= 2){
                         volunteerFoundID = key;
                         noOfVolunteers++;
+                        volunteerFound = true;
                         sendNotification(volunteerFoundID, Latitude, Longitude);
                         findVolunteers();
-                    }
-                    else {
-                        volunteerFound = true;
-                    }
                 }
             }
 
@@ -456,8 +468,58 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
     }
 
+    private void currentUser(){
+
+        DatabaseReference currentUser = FirebaseDatabase.getInstance().getReference("Users").child(userID);
+       currentUser.addValueEventListener(new ValueEventListener() {
+           @Override
+           public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+               Name = dataSnapshot.child("name").getValue(String.class);
+               Phone_number = dataSnapshot.child("phone").getValue(String.class);
+           }
+
+           @Override
+           public void onCancelled(@NonNull DatabaseError databaseError) {
+
+           }
+       });
+    }
+
+    private void volunteerDetails(String Key){
+        DatabaseReference VolunteerDetails = FirebaseDatabase.getInstance().getReference("Users").child(Key);
+        VolunteerDetails.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                VName = dataSnapshot.child("name").getValue(String.class);
+                Vphone = dataSnapshot.child("phone").getValue(String.class);
+                Log.v(TAG," "+VName+"/"+Vphone);
+
+                callLayout.setVisibility(View.VISIBLE);
+                vname.setText(VName);
+                vphone.setText(Vphone);
+                callButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                        callIntent.setData(Uri.parse("tel:"+Vphone));
+                        startActivity(callIntent);
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private void sendNotification(final String key, final Double latitude, final Double longitude) {
-        Toast.makeText(this," "+ latitude+"/"+longitude, Toast.LENGTH_SHORT).show();
+        currentUser();
+        //Toast.makeText(this," "+ latitude+"/"+longitude, Toast.LENGTH_SHORT).show();
+        volunteerDetails(key);
+
         String Lat = String.valueOf(latitude);
         String Long = String.valueOf(longitude);
 
@@ -465,8 +527,8 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         try {
             mainObj.put("to", "/topics/" + key);
             JSONObject notificationObject = new JSONObject();
-            notificationObject.put("title", "Emergency Alert");
-            notificationObject.put("body", " " + latitude + "/ " + longitude);
+            notificationObject.put("title", " "+Name+ "needs your help");
+            notificationObject.put("body", " Phone Number : "+Phone_number);
             JSONObject locationData = new JSONObject();
             locationData.put("Latitude", Lat);
             locationData.put("Longitude", Long);

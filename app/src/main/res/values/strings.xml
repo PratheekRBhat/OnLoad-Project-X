@@ -23,6 +23,9 @@
     <string name="help">SEND DISTRESS SIGNAL</string>
     <string name="sign_out">Sign Out</string>
     <string name="new_user_sign_up">New User? Sign Up</string>
+    <string name="Name">Name</string>
+    <string name="Phone_number">Phone_Number</string>
+    <string name="call_button">call_button</string>
 
 
 </resources>
