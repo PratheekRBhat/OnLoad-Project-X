@@ -152,7 +152,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         vphone = findViewById(R.id.Volunteer_phone);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         callButton = findViewById(R.id.callButton);
-
+        currentUser();
         distressSignalButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -516,7 +516,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     private void sendNotification(final String key, final Double latitude, final Double longitude) {
-        currentUser();
+
         //Toast.makeText(this," "+ latitude+"/"+longitude, Toast.LENGTH_SHORT).show();
         volunteerDetails(key);
 
@@ -527,7 +527,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         try {
             mainObj.put("to", "/topics/" + key);
             JSONObject notificationObject = new JSONObject();
-            notificationObject.put("title", " "+Name+ "needs your help");
+            notificationObject.put("title", " " + Name + " needs your help");
             notificationObject.put("body", " Phone Number : "+Phone_number);
             JSONObject locationData = new JSONObject();
             locationData.put("Latitude", Lat);
@@ -598,8 +598,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             Log.e(TAG, "Can't find style. Error: ", e);
         }
     }
-
-
     @Override
     public void onTaskDone(Object... values) {
 
