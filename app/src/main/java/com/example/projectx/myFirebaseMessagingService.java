@@ -1,10 +1,13 @@
 package com.example.projectx;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -29,11 +32,17 @@ public class myFirebaseMessagingService extends FirebaseMessagingService {
         String DestinationLongitude = extraData.get("Longitude");
 
         String notificationChannelID = "DistressSignalAlert";
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, notificationChannelID)
                 .setContentTitle(title)
                 .setContentText(body)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.login_logo))
-                .setSmallIcon(R.drawable.login_logo);
+                .setSmallIcon(R.drawable.login_logo)
+                .setSound(alarmSound)
+                .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
+
+
+
 
         Intent intent = new Intent(this, User_Activity.class);
         intent.putExtra("DLatitude", DestinationLatitude);

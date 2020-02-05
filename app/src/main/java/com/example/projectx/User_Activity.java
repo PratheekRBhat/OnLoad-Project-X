@@ -163,7 +163,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        linearLayout.setVisibility(View.GONE);
+
                         Toast.makeText(getApplicationContext(), "Help is on its way", Toast.LENGTH_SHORT).show();
                         findVolunteers();
 
@@ -209,6 +209,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     }
 
      void findVolunteers() {
+        distressSignalButton.setVisibility(View.GONE);
         DatabaseReference findVolunteer = FirebaseDatabase.getInstance().getReference("LocationData");
         GeoFire geoFire = new GeoFire(findVolunteer);
         getDeviceLocation();
