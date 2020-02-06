@@ -103,7 +103,7 @@ public class SignUpActivity extends AppCompatActivity {
                                         use.setPassword(password);
                                         use.setGender(gender);
 
-                                        users.child(mAuth.getCurrentUser().getUid()).setValue(use).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        users.child(user.getUid()).setValue(use).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
