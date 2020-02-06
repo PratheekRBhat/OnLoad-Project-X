@@ -537,9 +537,9 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     private void updateLocationInRealtime(Double latitude, Double longitude) {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("LocationData").child("" + userID);
-        ref.child("/l/0").setValue(latitude);
-        ref.child("/l/1").setValue(longitude);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("LocationData");
+        GeoFire geoFire = new GeoFire(ref);
+        geoFire.setLocation(userID, new GeoLocation(latitude, longitude));
     }
 
     @Override

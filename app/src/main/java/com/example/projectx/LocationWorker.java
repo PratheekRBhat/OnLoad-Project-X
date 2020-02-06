@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -23,9 +25,9 @@ public class LocationWorker extends Worker {
     }
 
     private void updateLocationInRealtimeFromBackgroud(String userId, Double latitude, Double longitude) {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        ref.child("https://project-x-b7828.firebaseio.com/LocationData/" + userId + "/l/0").setValue(latitude);
-        ref.child("https://project-x-b7828.firebaseio.com/LocationData/" + userId + "/l/1").setValue(longitude);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("LocationData");
+        GeoFire geoFire = new GeoFire(ref);
+        geoFire.setLocation(userId, new GeoLocation(latitude, longitude));
     }
 
     @NonNull
