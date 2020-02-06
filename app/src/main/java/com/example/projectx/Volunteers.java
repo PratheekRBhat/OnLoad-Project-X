@@ -2,6 +2,7 @@ package com.example.projectx;
 
 public class Volunteers {
 
+    private String key;
     private double latitude, longitude;
 
     public Volunteers(double latitude, double longitude) {
@@ -14,6 +15,19 @@ public class Volunteers {
     public Volunteers() {
     }
 
+    public Volunteers(String key, double latitude, double longitude) {
+        this.key = key;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 
     public double getLatitude() {
         return latitude;

@@ -46,6 +46,7 @@ import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryEventListener;
+import com.firebase.geofire.LocationCallback;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -101,7 +102,9 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     private int radius = 1;
     private boolean volunteerFound = false;
 
-    private String volunteerFoundID, destinationLatitude, destinationLongitude;
+//    private String volunteerFoundID;
+    private String[] volunteerFoundID = new String[3];
+    private String destinationLatitude, destinationLongitude;
     private RequestQueue requestQueue;
     private String URL = "https://fcm.googleapis.com/fcm/send";
     private boolean helping = false;
@@ -112,6 +115,8 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     private TextView vname,vphone;
     private ImageButton callButton;
 
+    private String volunteerKey;
+    private double volunteerLatitude,volunteerLongitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,23 +213,106 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         return true;
     }
 
+    private void addNotifiedVolunteer(String key){
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("LocationData");
+        DatabaseReference notifiedVolunteer = FirebaseDatabase.getInstance().getReference("keyFound");
+
+        final GeoFire findVolunteerGeoFire = new GeoFire(ref);
+        final GeoFire notifiedVolunteerGeoFire = new GeoFire(notifiedVolunteer);
+
+        findVolunteerGeoFire.getLocation(key, new LocationCallback() {
+            @Override
+            public void onLocationResult(String key, GeoLocation location) {
+                if (location != null) {
+
+                    volunteerKey = key;
+                    volunteerLatitude = location.latitude;
+                    volunteerLongitude = location.longitude;
+                    Log.v("foundVolunteer","lat:"+volunteerLatitude+" long:"+volunteerLongitude);
+
+                    notifiedVolunteerGeoFire.setLocation(volunteerKey,new GeoLocation(volunteerLatitude,volunteerLongitude));
+                    findVolunteerGeoFire.removeLocation(volunteerKey);
+
+                } else {
+                    System.err.println(String.format("There is no location for key %s in GeoFire", key));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.err.println("There was an error getting the GeoFire location: " + databaseError);
+            }
+        });
+
+    }
+
+    private void removeNotifiedVolunteer(String key){
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("LocationData");
+        DatabaseReference notifiedVolunteer = FirebaseDatabase.getInstance().getReference("keyFound");
+
+        final GeoFire findVolunteerGeoFire = new GeoFire(ref);
+        final GeoFire notifiedVolunteerGeoFire = new GeoFire(notifiedVolunteer);
+
+        notifiedVolunteerGeoFire.getLocation(key, new LocationCallback() {
+            @Override
+            public void onLocationResult(String key, GeoLocation location) {
+                if (location != null) {
+
+                    volunteerKey = key;
+                    volunteerLatitude = location.latitude;
+                    volunteerLongitude = location.longitude;
+                    Log.v("removedVolunteer","lat:"+volunteerLatitude+" long:"+volunteerLongitude);
+
+                    findVolunteerGeoFire.setLocation(volunteerKey,new GeoLocation(volunteerLatitude,volunteerLongitude));
+                    notifiedVolunteerGeoFire.removeLocation(volunteerKey);
+
+                } else {
+                    System.err.println(String.format("There is no location for key %s in GeoFire", key));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.err.println("There was an error getting the GeoFire location: " + databaseError);
+            }
+        });
+
+    }
+
      void findVolunteers() {
         distressSignalButton.setVisibility(View.GONE);
-        DatabaseReference findVolunteer = FirebaseDatabase.getInstance().getReference("LocationData");
-        GeoFire geoFire = new GeoFire(findVolunteer);
+        final DatabaseReference findVolunteer = FirebaseDatabase.getInstance().getReference("LocationData");
+        final DatabaseReference notifiedVolunteer = FirebaseDatabase.getInstance().getReference("keyFound");
+
+        final GeoFire geoFire = new GeoFire(findVolunteer);
         getDeviceLocation();
-        GeoQuery findVol = geoFire.queryAtLocation(new GeoLocation(Latitude, Longitude), radius);
+        final GeoQuery findVol = geoFire.queryAtLocation(new GeoLocation(Latitude, Longitude), radius);
         findVol.removeAllListeners();
 
-        findVol.addGeoQueryEventListener(new GeoQueryEventListener() {
+         findVol.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
                 if (!volunteerFound && !key.equals(userID)) {
-                        volunteerFoundID = key;
-                        noOfVolunteers++;
-                        volunteerFound = true;
-                        sendNotification(volunteerFoundID, Latitude, Longitude);
-                        findVolunteers();
+                        if(noOfVolunteers <= 2){
+
+                            volunteerFoundID[noOfVolunteers] = key;
+                            noOfVolunteers++;
+                            Log.v("volunteer",key);
+
+                            addNotifiedVolunteer(key);
+                            sendNotification(key,Latitude,Longitude);
+                            findVolunteers();
+
+                        } else {
+
+                            for (String K:volunteerFoundID) {
+                                removeNotifiedVolunteer(K);
+                            }
+
+                            volunteerFound = true;
+                        }
                 }
             }
 
@@ -449,9 +537,9 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     private void updateLocationInRealtime(Double latitude, Double longitude) {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("LocationData").child("" + userID);
-        ref.child("/l/0").setValue(latitude);
-        ref.child("/l/1").setValue(longitude);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("LocationData");
+        GeoFire geoFire = new GeoFire(ref);
+        geoFire.setLocation(userID, new GeoLocation(latitude, longitude));
     }
 
     @Override
