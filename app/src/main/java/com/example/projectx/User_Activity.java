@@ -636,7 +636,8 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
                 }
             }
-            ) {
+            )
+            {
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     Map<String, String> header = new HashMap<>();
