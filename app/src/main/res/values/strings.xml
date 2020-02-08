@@ -26,6 +26,11 @@
     <string name="Name">Name</string>
     <string name="Phone_number">Phone_Number</string>
     <string name="call_button">call_button</string>
+    <string name="settings">Settings</string>
+    <string name="backbutton">backButton</string>
+    <string name="title_activity_preference_settings">Settings</string>
+    <string name="emergency_contact">Emergency Contact</string>
+    <string name="set_your_emergency_contact_here">Set your emergency contact here</string>
 
 
 </resources>

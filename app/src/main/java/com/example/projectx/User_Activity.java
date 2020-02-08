@@ -42,6 +42,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.projectx.DirectionHelpers.FetchURL;
 import com.example.projectx.DirectionHelpers.TaskLoadedCallback;
+
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -168,7 +169,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                         Toast.makeText(getApplicationContext(), "Help is on its way", Toast.LENGTH_SHORT).show();
                         findVolunteers();
 
@@ -177,7 +177,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                 builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(), "Its ok", Toast.LENGTH_SHORT).show();
+
                     }
                 });
                 builder.show();
@@ -343,12 +343,8 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.signOut) {
-            FirebaseAuth.getInstance().signOut();
-            DatabaseReference loggedOutUserLocationData = FirebaseDatabase.getInstance().getReference("LocationData").child(userID);
-            loggedOutUserLocationData.removeValue();
-            Intent intent = new Intent(User_Activity.this, LandingPageActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        if (item.getItemId() == R.id.settings) {
+            Intent intent = new Intent(User_Activity.this, SettingsActivity.class);
             startActivity(intent);
             return true;
         }

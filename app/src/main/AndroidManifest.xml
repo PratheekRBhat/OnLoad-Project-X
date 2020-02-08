@@ -9,16 +9,18 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
-
     <application
         android:allowBackup="true"
+        android:fullBackupContent="true"
         android:icon="@drawable/login_logo"
         android:label="@string/app_name"
         android:roundIcon="@drawable/login_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning"
-        android:fullBackupContent="true">
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".SettingsActivity"
+            android:theme="@style/AppTheme"
+            />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -34,17 +36,18 @@
             android:theme="@style/RegularPages" />
         <activity
             android:name=".LoginInActivity"
-            android:theme="@style/RegularPages"
             android:label="LOGIN"
-            android:parentActivityName=".LandingPageActivity" />
+            android:parentActivityName=".LandingPageActivity"
+            android:theme="@style/RegularPages" />
         <activity
             android:name=".SignUpActivity"
             android:label="REGISTER"
-            android:theme="@style/RegularPages"
-            android:parentActivityName=".LandingPageActivity" />
+            android:parentActivityName=".LandingPageActivity"
+            android:theme="@style/RegularPages" />
         <activity android:name=".LandingPageActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -63,7 +66,6 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
-
     </application>
 
 </manifest>
