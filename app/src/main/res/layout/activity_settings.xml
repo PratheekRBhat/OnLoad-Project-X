@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SettingsActivity"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_marginTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="10dp"
+            android:text="@string/settings"
+            android:textSize="24sp"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_marginTop="15dp"
+            app:backgroundTint="#ffffff"
+            app:rippleColor="#EEEEEE"
+            android:layout_marginStart="15dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_back_black_24dp"
+            />
+
+    </FrameLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <fragment
+        android:layout_marginTop="15dp"
+        android:id="@+id/settingsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:name="com.example.projectx.SettingsFragment"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/signOut"
+        android:text="@string/sign_out"
+        android:paddingTop="25dp"
+        android:paddingBottom="25dp"
+        android:paddingStart="75dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:textColor="#00000f"
+        tools:ignore="RtlSymmetry"
+        android:focusable="true" />
+</LinearLayout>
+
+
+</LinearLayout>
