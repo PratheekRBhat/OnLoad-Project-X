@@ -6,6 +6,8 @@
     tools:context=".SettingsActivity"
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/settings_screen"
+
     >
     <FrameLayout
         android:layout_width="match_parent"
@@ -28,6 +30,7 @@
             app:rippleColor="#EEEEEE"
             android:layout_marginStart="15dp"
             android:layout_height="wrap_content"
+            android:id="@+id/backButton"
             android:src="@drawable/ic_arrow_back_black_24dp"
             />
 

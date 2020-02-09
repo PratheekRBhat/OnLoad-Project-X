@@ -31,6 +31,7 @@
     <string name="title_activity_preference_settings">Settings</string>
     <string name="emergency_contact">Emergency Contact</string>
     <string name="set_your_emergency_contact_here">Set your emergency contact here</string>
+    <string name="emergency_contact_preference_key">EmergencyContact</string>
 
 
 </resources>

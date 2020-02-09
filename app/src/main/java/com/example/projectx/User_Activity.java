@@ -12,6 +12,8 @@ import androidx.work.WorkManager;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Location;
@@ -20,6 +22,7 @@ import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -118,6 +121,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
     private String volunteerKey;
     private double volunteerLatitude,volunteerLongitude;
+    private String emergencyContactNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,6 +187,16 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                 builder.show();
             }
         });
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        emergencyContactNumber = preferences.getString(getResources().getString(R.string.emergency_contact_preference_key)," ");
+        if(emergencyContactNumber.length()!=10){
+            boolean result = checkEmergencyNumber(emergencyContactNumber);
+            if(!result) {
+                Toast.makeText(getApplicationContext(), "Invalid emergency Contact length", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Please set it immideatly", Toast.LENGTH_SHORT).show();
+            }
+        }
+
         Intent intent = getIntent();
         if (intent.hasExtra("DLatitude")) {
             destinationLatitude = intent.getStringExtra("DLatitude");
@@ -195,6 +209,16 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         }
 
 
+    }
+    private Boolean checkEmergencyNumber(String number){
+        boolean result = true;
+        try{
+            int numbe = Integer.parseInt(number);
+        }catch(NumberFormatException e) {
+            result = false;
+            Log.d("Invalid Phone number",e.getMessage());
+        }
+        return result;
     }
 
     private void startLocationWorker() {
@@ -691,5 +715,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             currentPolyline.remove();
         currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
     }
+
 }
 

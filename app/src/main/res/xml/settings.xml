@@ -4,7 +4,7 @@
 <EditTextPreference
     android:defaultValue=" "
     app:title="@string/emergency_contact"
-    android:key="EmergencyContact"
+    android:key="@string/emergency_contact_preference_key"
     android:summary="Enter your emergency contact here"
     />
 </PreferenceScreen>
