@@ -106,7 +106,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     private int radius = 1;
     private boolean volunteerFound = false;
 
-//    private String volunteerFoundID;
     private String[] volunteerFoundID = new String[3];
     private String destinationLatitude, destinationLongitude;
     private RequestQueue requestQueue;
@@ -305,7 +304,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     }
 
      void findVolunteers() {
-        distressSignalButton.setVisibility(View.GONE);
+
         final DatabaseReference findVolunteer = FirebaseDatabase.getInstance().getReference("LocationData");
         final DatabaseReference notifiedVolunteer = FirebaseDatabase.getInstance().getReference("keyFound");
 
@@ -322,7 +321,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
                             volunteerFoundID[noOfVolunteers] = key;
                             noOfVolunteers++;
-                            Log.v("volunteer",key);
+                            Log.v("volunteer",key+" "+radius);
 
                             addNotifiedVolunteer(key);
                             sendNotification(key,Latitude,Longitude);
@@ -624,8 +623,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     private void sendNotification(final String key, final Double latitude, final Double longitude) {
-
-        //Toast.makeText(this," "+ latitude+"/"+longitude, Toast.LENGTH_SHORT).show();
         volunteerDetails(key);
 
         String Lat = String.valueOf(latitude);
