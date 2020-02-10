@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,10 +43,16 @@ public class LoginInActivity extends AppCompatActivity {
         final TextInputEditText l_email = findViewById(R.id.login_email);
         final TextInputEditText l_password = findViewById(R.id.login_password);
         Button login_btn = findViewById(R.id.Login_btn);
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+
+
+        FloatingActionButton backButton = findViewById(R.id.login_back_button);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
         TextView signUpLink = findViewById(R.id.signUpLink);
         signUpLink.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,13 +98,6 @@ public class LoginInActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            NavUtils.navigateUpFromSameTask(this);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+
 
 }

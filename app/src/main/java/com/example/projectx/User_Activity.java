@@ -121,7 +121,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
     private String volunteerKey;
     private double volunteerLatitude,volunteerLongitude;
-    private String emergencyContactNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,7 +187,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             }
         });
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        emergencyContactNumber = preferences.getString(getResources().getString(R.string.emergency_contact_preference_key)," ");
+        String emergencyContactNumber = preferences.getString(getResources().getString(R.string.emergency_contact_preference_key), " ");
         if(emergencyContactNumber.length()!=10){
             boolean result = checkEmergencyNumber(emergencyContactNumber);
             if(!result) {

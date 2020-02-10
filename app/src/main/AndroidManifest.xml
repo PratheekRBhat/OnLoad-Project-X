@@ -39,7 +39,7 @@
             android:name=".LoginInActivity"
             android:label="LOGIN"
             android:parentActivityName=".LandingPageActivity"
-            android:theme="@style/RegularPages" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".SignUpActivity"
             android:label="REGISTER"

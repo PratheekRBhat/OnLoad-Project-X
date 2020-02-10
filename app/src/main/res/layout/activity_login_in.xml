@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginInActivity">
+    tools:context=".LoginInActivity"
+    android:background="@drawable/settings_screen"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+   <com.google.android.material.floatingactionbutton.FloatingActionButton
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:src="@drawable/ic_arrow_back_black_24dp"
+       android:contentDescription="@string/backbutton"
+       android:id="@+id/login_back_button"
+       android:layout_marginTop="15dp"
+       android:layout_marginStart="25dp"
+       app:backgroundTint="#ffffff"
+       />
 
-
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -18,11 +30,11 @@
 
             <ImageView
                 android:id="@+id/logo"
-                android:layout_width="150dp"
+                android:layout_width="wrap_content"
                 android:layout_height="150dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="100dp"
+                android:layout_marginTop="70dp"
                 android:src="@drawable/login_logo"
                 android:contentDescription="@string/logo" />
 
@@ -31,7 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/logo"
-                android:layout_marginTop="70dp">
+                android:layout_marginTop="50dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/login_email"
@@ -74,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/passwordLayout"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="40dp"
                 android:paddingLeft="40dp"
                 android:paddingRight="40dp"
                 android:text="@string/login"
@@ -93,7 +105,10 @@
                 android:textColor="@color/colorPrimaryDark"
                 android:id="@+id/signUpLink" />
         </RelativeLayout>
-    </FrameLayout>
-
 
 </ScrollView>
+
+
+
+
+</LinearLayout>
