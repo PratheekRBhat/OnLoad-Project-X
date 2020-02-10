@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,9 +41,9 @@ public class LoginInActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_in);
-        final TextInputEditText l_email = findViewById(R.id.login_email);
-        final TextInputEditText l_password = findViewById(R.id.login_password);
-        Button login_btn = findViewById(R.id.Login_btn);
+        final EditText l_email = findViewById(R.id.login_email);
+        final EditText l_password = findViewById(R.id.login_password);
+        TextView login_btn = findViewById(R.id.Login_btn);
 
 
         FloatingActionButton backButton = findViewById(R.id.login_back_button);
@@ -68,24 +69,30 @@ public class LoginInActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String email = l_email.getText().toString();
                 String password = l_password.getText().toString();
-                final AlertDialog waitingDialog = new SpotsDialog(LoginInActivity.this);
-                waitingDialog.show();
-                mAuth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    FirebaseUser user = mAuth.getCurrentUser();
-                                    waitingDialog.dismiss();
-                                    updateUI(user);
-                                } else {
-                                    Toast.makeText(LoginInActivity.this, "Authentication failed.",
-                                            Toast.LENGTH_SHORT).show();
-                                    waitingDialog.dismiss();
-                                    updateUI(null);
+                if(email.isEmpty()&& password.isEmpty()){
+                    Toast.makeText(getApplicationContext(),"Please Fill in the credentials",Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    final AlertDialog waitingDialog = new SpotsDialog(LoginInActivity.this);
+                    waitingDialog.show();
+                    mAuth.signInWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        FirebaseUser user = mAuth.getCurrentUser();
+                                        waitingDialog.dismiss();
+                                        updateUI(user);
+                                    } else {
+                                        Toast.makeText(LoginInActivity.this, "Authentication failed.",
+                                                Toast.LENGTH_SHORT).show();
+                                        waitingDialog.dismiss();
+                                        updateUI(null);
+                                    }
                                 }
-                            }
-                        });
+                            });
+                }
+
 
             }
         });

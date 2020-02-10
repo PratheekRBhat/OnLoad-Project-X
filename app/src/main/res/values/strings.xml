@@ -32,6 +32,7 @@
     <string name="emergency_contact">Emergency Contact</string>
     <string name="set_your_emergency_contact_here">Set your emergency contact here</string>
     <string name="emergency_contact_preference_key">EmergencyContact</string>
+    <string name="greeting">Nice to see you again!</string>
 
 
 </resources>
