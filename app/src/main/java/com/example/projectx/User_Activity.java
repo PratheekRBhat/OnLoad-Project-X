@@ -156,6 +156,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         requestQueue = Volley.newRequestQueue(this);
 
         FirebaseMessaging.getInstance().subscribeToTopic(userID);
+
         vname = findViewById(R.id.Volunteer_name);
         vphone = findViewById(R.id.Volunteer_phone);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -286,7 +287,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                     volunteerLatitude = location.latitude;
                     volunteerLongitude = location.longitude;
                     Log.v("removedVolunteer","lat:"+volunteerLatitude+" long:"+volunteerLongitude);
-
                     findVolunteerGeoFire.setLocation(volunteerKey,new GeoLocation(volunteerLatitude,volunteerLongitude));
                     notifiedVolunteerGeoFire.removeLocation(volunteerKey);
 

@@ -13,6 +13,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -39,7 +40,10 @@ public class LocationWorker extends Worker {
             Tasks.await(locationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
-                    updateLocationInRealtimeFromBackgroud(uid, location.getLatitude(), location.getLongitude());
+                    //Don't update values in backend if user is logged out
+                    if(FirebaseAuth.getInstance().getCurrentUser()!=null){
+                        updateLocationInRealtimeFromBackgroud(uid, location.getLatitude(), location.getLongitude());
+                    }
                 }
             }));
         } catch (ExecutionException e) {
@@ -47,7 +51,6 @@ public class LocationWorker extends Worker {
         } catch (InterruptedException e) {
             e.getMessage();
         }
-
         return Result.success();
     }
 }
