@@ -12,11 +12,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -35,7 +30,7 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText emailET, nameET, phoneET, passwordET;
     private RadioGroup genderRG;
     String name, email, password, phone, gender;
-    private InterstitialAd mInterstitialAd;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,16 +52,7 @@ public class SignUpActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        MobileAds.initialize(this,"ca-app-pub-5022851642647239/6402318058");
-        mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-5022851642647239/6402318058");
-        mInterstitialAd.loadAd(new AdRequest.Builder().build());
-        mInterstitialAd.setAdListener(new AdListener(){
-            @Override
-            public void onAdClosed() {
-                mInterstitialAd.loadAd(new AdRequest.Builder().build());
-            }
-        });
+
 
 
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -119,12 +105,7 @@ public class SignUpActivity extends AppCompatActivity {
                                                 Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
                                             }
                                         });
-                                        if (mInterstitialAd.isLoaded()) {
-                                            mInterstitialAd.show();
 
-                                        } else {
-                                            Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                        }
                                         updateUI(user);
                                     } else {
                                         Log.w(TAG, "createUserWithEmail:failure", task.getException());

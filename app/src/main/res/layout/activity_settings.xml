@@ -59,7 +59,17 @@
         android:textColor="#00000f"
         tools:ignore="RtlSymmetry"
         android:focusable="true" />
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        ads:adSize="BANNER"
+        android:layout_marginTop="100dp"
+        ads:adUnitId="ca-app-pub-5022851642647239/3582930636">
+    </com.google.android.gms.ads.AdView>
 </LinearLayout>
+
 
 
 </LinearLayout>

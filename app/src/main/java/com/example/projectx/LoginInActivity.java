@@ -12,10 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.ads.MobileAds;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -31,7 +29,7 @@ import dmax.dialog.SpotsDialog;
 public class LoginInActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private FirebaseAuth mAuth;
-    private InterstitialAd mInterstitialAd;
+
 
 
     @Override
@@ -41,16 +39,7 @@ public class LoginInActivity extends AppCompatActivity {
         final EditText l_email = findViewById(R.id.login_email);
         final EditText l_password = findViewById(R.id.login_password);
         TextView login_btn = findViewById(R.id.Login_btn);
-        MobileAds.initialize(this,"ca-app-pub-5022851642647239/6402318058");
-        mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-5022851642647239/6402318058");
-        mInterstitialAd.loadAd(new AdRequest.Builder().build());
-        mInterstitialAd.setAdListener(new AdListener(){
-            @Override
-            public void onAdClosed() {
-                mInterstitialAd.loadAd(new AdRequest.Builder().build());
-            }
-        });
+
 
         FloatingActionButton backButton = findViewById(R.id.login_back_button);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -106,12 +95,7 @@ public class LoginInActivity extends AppCompatActivity {
     }
 
     private void updateUI(FirebaseUser user) {
-        if (mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
 
-        } else {
-            Log.d("TAG", "The interstitial wasn't loaded yet.");
-        }
         if (user != null) {
             Intent intent = new Intent(LoginInActivity.this, User_Activity.class);
             startActivity(intent);
