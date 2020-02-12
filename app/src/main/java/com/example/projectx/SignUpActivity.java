@@ -2,27 +2,21 @@ package com.example.projectx;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NavUtils;
-
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,9 +27,8 @@ public class SignUpActivity extends AppCompatActivity {
 
     private static final String TAG = "SignUpActivity";
     private FirebaseAuth mAuth;
-    private FirebaseDatabase database;
     DatabaseReference users;
-    private TextInputEditText emailET, nameET, phoneET, passwordET;
+    private EditText emailET, nameET, phoneET, passwordET;
     private RadioGroup genderRG;
     String name, email, password, phone, gender;
 
@@ -45,18 +38,21 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         mAuth = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
         users = database.getReference("Users");
         emailET = findViewById(R.id.email);
         nameET = findViewById(R.id.full_name_et);
         phoneET = findViewById(R.id.phone);
         passwordET = findViewById(R.id.password);
         genderRG = findViewById(R.id.Gender_radio_group);
-        Button submitButton = findViewById(R.id.register_btn);
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        TextView submitButton = findViewById(R.id.register_btn);
+        FloatingActionButton backButton = findViewById(R.id.signUpbackButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
 
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -133,12 +129,5 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            NavUtils.navigateUpFromSameTask(this);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+
 }
