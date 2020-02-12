@@ -2,39 +2,36 @@ package com.example.projectx;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NavUtils;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.button.MaterialButton;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.textfield.TextInputEditText;
+
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+
 
 import dmax.dialog.SpotsDialog;
 
 public class LoginInActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private FirebaseAuth mAuth;
+    private InterstitialAd mInterstitialAd;
 
 
     @Override
@@ -44,7 +41,16 @@ public class LoginInActivity extends AppCompatActivity {
         final EditText l_email = findViewById(R.id.login_email);
         final EditText l_password = findViewById(R.id.login_password);
         TextView login_btn = findViewById(R.id.Login_btn);
-
+        MobileAds.initialize(this,"ca-app-pub-5022851642647239/6402318058");
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-5022851642647239/6402318058");
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+        mInterstitialAd.setAdListener(new AdListener(){
+            @Override
+            public void onAdClosed() {
+                mInterstitialAd.loadAd(new AdRequest.Builder().build());
+            }
+        });
 
         FloatingActionButton backButton = findViewById(R.id.login_back_button);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -82,6 +88,7 @@ public class LoginInActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         FirebaseUser user = mAuth.getCurrentUser();
                                         waitingDialog.dismiss();
+
                                         updateUI(user);
                                     } else {
                                         Toast.makeText(LoginInActivity.this, "Authentication failed.",
@@ -99,6 +106,12 @@ public class LoginInActivity extends AppCompatActivity {
     }
 
     private void updateUI(FirebaseUser user) {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+
+        } else {
+            Log.d("TAG", "The interstitial wasn't loaded yet.");
+        }
         if (user != null) {
             Intent intent = new Intent(LoginInActivity.this, User_Activity.class);
             startActivity(intent);

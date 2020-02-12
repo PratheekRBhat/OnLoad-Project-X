@@ -26,6 +26,10 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -56,10 +60,13 @@ public class LandingPageActivity extends AppCompatActivity {
         Button register = findViewById(R.id.RegisterButton);
         Button signIn = findViewById(R.id.SignInButton);
 
+
+
         mAuth = FirebaseAuth.getInstance();
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if(mLocationPermissionGranted){
                     Intent intent = new Intent(LandingPageActivity.this, SignUpActivity.class);
                     startActivity(intent);
