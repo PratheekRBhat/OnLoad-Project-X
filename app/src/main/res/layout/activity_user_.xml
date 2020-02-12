@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".User_Activity">
+    tools:context=".User_Activity"
+    android:background="@drawable/settings_screen"
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -17,20 +19,38 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:visibility="visible" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/settings"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:backgroundTint="#FFCF3D"
+            android:src="@drawable/ic_settings_black_24dp"
+            tools:ignore="RelativeOverlap" />
 
         <LinearLayout
+            android:layout_below="@id/settings"
             android:id="@+id/mapLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="visible"
+            android:layout_marginTop="35dp"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+
+            >
 
             <fragment
                 android:id="@+id/map"
                 android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
                 android:layout_height="400dp"
-                android:layout_margin="20dp" />
+                android:layout_margin="20dp"
+                app:elevation="10dp"
+                />
 
         </LinearLayout>
 
@@ -40,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/mapLayout"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="30dp"
             android:text="@string/help"
             android:visibility="visible" />
         <RelativeLayout
@@ -57,7 +77,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginStart="15dp"
-                >
+                tools:ignore="RelativeOverlap">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

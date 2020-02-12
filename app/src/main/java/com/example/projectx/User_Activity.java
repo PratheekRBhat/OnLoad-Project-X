@@ -24,9 +24,6 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -65,6 +62,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -156,7 +154,14 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         requestQueue = Volley.newRequestQueue(this);
 
         FirebaseMessaging.getInstance().subscribeToTopic(userID);
-
+        FloatingActionButton backButton = findViewById(R.id.settings);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(User_Activity.this, SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
         vname = findViewById(R.id.Volunteer_name);
         vphone = findViewById(R.id.Volunteer_phone);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -228,13 +233,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         WorkManager.getInstance(this).enqueue(workRequest);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menus) {
 
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.user_menu, menus);
-        return true;
-    }
 
     private void addNotifiedVolunteer(String key){
 
@@ -361,16 +360,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
             }
         });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.settings) {
-            Intent intent = new Intent(User_Activity.this, SettingsActivity.class);
-            startActivity(intent);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
