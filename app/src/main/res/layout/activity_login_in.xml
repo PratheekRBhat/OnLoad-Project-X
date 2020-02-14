@@ -16,7 +16,7 @@
        android:id="@+id/login_back_button"
        android:layout_marginTop="15dp"
        android:layout_marginStart="25dp"
-       app:backgroundTint="#ffffff"
+       app:backgroundTint="#673ab7"
        />
 
 <ScrollView
