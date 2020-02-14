@@ -154,12 +154,20 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         requestQueue = Volley.newRequestQueue(this);
 
         FirebaseMessaging.getInstance().subscribeToTopic(userID);
+        FirebaseMessaging.getInstance().subscribeToTopic("Volunteer"+userID);
         FloatingActionButton backButton = findViewById(R.id.settings);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(User_Activity.this, SettingsActivity.class);
                 startActivity(intent);
+            }
+        });
+        Button AttendingButton = findViewById(R.id.Atteniding_button);
+        AttendingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendAttendingNotification(userID);
             }
         });
         vname = findViewById(R.id.Volunteer_name);
@@ -214,6 +222,11 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
 
     }
+
+    private void sendAttendingNotification(String userID) {
+        //add method for vounteer notification
+    }
+
     private Boolean checkEmergencyNumber(String number){
         boolean result = true;
         try{
