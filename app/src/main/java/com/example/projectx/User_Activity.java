@@ -130,6 +130,8 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         }
 
         setContentView(R.layout.activity_user_);
+        userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        currentUser();
 
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -150,7 +152,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
         linearLayout.setVisibility(View.VISIBLE);
         distressSignalButton.setVisibility(View.VISIBLE);
-        userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         requestQueue = Volley.newRequestQueue(this);
 
         FirebaseMessaging.getInstance().subscribeToTopic(userID);
@@ -174,7 +176,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         vphone = findViewById(R.id.Volunteer_phone);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         callButton = findViewById(R.id.callButton);
-        currentUser();
         distressSignalButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -205,7 +206,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             boolean result = checkEmergencyNumber(emergencyContactNumber);
             if(!result) {
                 Toast.makeText(getApplicationContext(), "Invalid emergency Contact length", Toast.LENGTH_SHORT).show();
-                Toast.makeText(getApplicationContext(), "Please set it immideatly", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -229,12 +229,15 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
     private Boolean checkEmergencyNumber(String number){
         boolean result = true;
-        try{
-            int numbe = Integer.parseInt(number);
-        }catch(NumberFormatException e) {
-            result = false;
-            Log.d("Invalid Phone number",e.getMessage());
+        if(number.length()==10){
+            try{
+                int numbe = Integer.parseInt(number);
+            }catch(NumberFormatException e) {
+                result = false;
+                Log.d("Invalid Phone number",e.getMessage());
+            }
         }
+
         return result;
     }
 
