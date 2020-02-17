@@ -211,7 +211,19 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             SourceKey = intent.getStringExtra("Skey");
             String notificationSender = intent.getStringExtra("Sender");
             helping = true;
-           Toast.makeText(this," "+notificationSender,Toast.LENGTH_LONG).show();
+           if(notificationSender.equals("DistressSignal")){
+               AttendingButton.setVisibility(View.VISIBLE);
+               AttendingButton.setOnClickListener(new View.OnClickListener() {
+                   @Override
+                   public void onClick(View v) {
+                       sendAttendingNotification(SourceKey);
+                   }
+               });
+           }
+           else if(notificationSender.equals("Volunteer")){
+               createDistressSignalLocationOnMap(destinationLatitude,destinationLongitude);
+           }
+
         }
         WorkManager.getInstance(this).cancelAllWork();
         if (mLocationPermissionGranted) {
@@ -229,7 +241,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         try {
             mainObj.put("to", "/topics/" + SKey);
             JSONObject notificationObject = new JSONObject();
-            notificationObject.put("title", " " + Name + " is on their way to helo you. Hang Tight");
+            notificationObject.put("title", " " + Name + " is on their way to help you. Hang Tight");
             notificationObject.put("body", " Phone Number : "+Phone_number);
             JSONObject locationData = new JSONObject();
             locationData.put("Latitude", Lat);
