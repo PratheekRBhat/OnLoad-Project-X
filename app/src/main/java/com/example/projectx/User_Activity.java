@@ -116,7 +116,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     private TextView vname,vphone;
     private ImageButton callButton;
 
-    private String volunteerKey;
+    private String volunteerKey,SourceKey;
     private double volunteerLatitude,volunteerLongitude;
 
     @Override
@@ -166,12 +166,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             }
         });
         Button AttendingButton = findViewById(R.id.Atteniding_button);
-        AttendingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendAttendingNotification(userID);
-            }
-        });
+
         vname = findViewById(R.id.Volunteer_name);
         vphone = findViewById(R.id.Volunteer_phone);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -213,7 +208,10 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         if (intent.hasExtra("DLatitude")) {
             destinationLatitude = intent.getStringExtra("DLatitude");
             destinationLongitude = intent.getStringExtra("DLongitude");
+            SourceKey = intent.getStringExtra("Skey");
+            String notificationSender = intent.getStringExtra("Sender");
             helping = true;
+           Toast.makeText(this," "+notificationSender,Toast.LENGTH_LONG).show();
         }
         WorkManager.getInstance(this).cancelAllWork();
         if (mLocationPermissionGranted) {
@@ -223,8 +221,50 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
     }
 
-    private void sendAttendingNotification(String userID) {
-        //add method for vounteer notification
+    private void sendAttendingNotification(String SKey) {
+        String Lat = String.valueOf(Latitude);
+        String Long = String.valueOf(Longitude);
+
+        JSONObject mainObj = new JSONObject();
+        try {
+            mainObj.put("to", "/topics/" + SKey);
+            JSONObject notificationObject = new JSONObject();
+            notificationObject.put("title", " " + Name + " is on their way to helo you. Hang Tight");
+            notificationObject.put("body", " Phone Number : "+Phone_number);
+            JSONObject locationData = new JSONObject();
+            locationData.put("Latitude", Lat);
+            locationData.put("Longitude", Long);
+            locationData.put("Key",userID);
+            locationData.put("Sender","Volunteer");
+
+            mainObj.put("notification", notificationObject);
+            mainObj.put("data", locationData);
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, URL,
+                    mainObj,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            }
+            )
+            {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> header = new HashMap<>();
+                    header.put("content-type", "application/json");
+                    header.put("authorization", "key=AIzaSyA-spthIkyVNryk0TVAFUqTvRenjeP3FeI");
+                    return header;
+                }
+            };
+            requestQueue.add(jsonObjectRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private Boolean checkEmergencyNumber(String number){
@@ -627,6 +667,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         });
     }
 
+
     private void sendNotification(final String key, final Double latitude, final Double longitude) {
         volunteerDetails(key);
 
@@ -642,6 +683,8 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             JSONObject locationData = new JSONObject();
             locationData.put("Latitude", Lat);
             locationData.put("Longitude", Long);
+            locationData.put("Key",userID);
+            locationData.put("Sender","DistressSignal");
 
             mainObj.put("notification", notificationObject);
             mainObj.put("data", locationData);

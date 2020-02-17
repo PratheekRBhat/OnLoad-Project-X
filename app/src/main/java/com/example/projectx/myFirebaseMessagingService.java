@@ -35,7 +35,8 @@ public class myFirebaseMessagingService extends FirebaseMessagingService {
         Map<String, String> extraData = remoteMessage.getData();
         String DestinationLatitude = extraData.get("Latitude");
         String DestinationLongitude = extraData.get("Longitude");
-
+        String key = extraData.get("Key");
+        String notificationSender = extraData.get("Sender");
         Uri soundUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://"+ getApplicationContext().getPackageName() + "/" + R.raw.alarm);
 
 
@@ -59,6 +60,13 @@ public class myFirebaseMessagingService extends FirebaseMessagingService {
         Intent intent = new Intent(this, User_Activity.class);
         intent.putExtra("DLatitude", DestinationLatitude);
         intent.putExtra("DLongitude", DestinationLongitude);
+        intent.putExtra("Skey",key);
+        if(notificationSender!=null && notificationSender.equals("DistressSignal")){
+            intent.putExtra("Sender","DistressSignal");
+        }
+        else if(notificationSender!=null && notificationSender.equals("Volunteer")){
+            intent.putExtra("Sender","Volunteer");
+        }
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 10, intent, PendingIntent.FLAG_UPDATE_CURRENT);
