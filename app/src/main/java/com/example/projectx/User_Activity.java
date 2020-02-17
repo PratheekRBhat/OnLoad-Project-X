@@ -640,6 +640,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                Name = dataSnapshot.child("name").getValue(String.class);
                Phone_number = dataSnapshot.child("phone").getValue(String.class);
+
            }
 
            @Override
