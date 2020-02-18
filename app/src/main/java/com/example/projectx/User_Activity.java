@@ -101,7 +101,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
-    private int radius = 1;
+    private double radius = 0.5;
     private boolean volunteerFound = false;
 
     private String[] volunteerFoundID = new String[3];
@@ -222,6 +222,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
            }
            else if(notificationSender.equals("Volunteer")){
                createDistressSignalLocationOnMap(destinationLatitude,destinationLongitude);
+
            }
 
         }
@@ -418,7 +419,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             @Override
             public void onGeoQueryReady() {
                 if (!volunteerFound) {
-                    radius += 1;
+                    radius += 0.1;
                     findVolunteers();
                 }
             }
