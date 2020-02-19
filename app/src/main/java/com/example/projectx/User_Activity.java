@@ -9,7 +9,7 @@ import androidx.preference.PreferenceManager;
 import androidx.work.Data;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
-import androidx.work.impl.model.Preference;
+
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -119,7 +119,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
     private String volunteerKey,SourceKey;
     private double volunteerLatitude,volunteerLongitude;
-    private String emergencyContact,personalContact;
+    private String emergencyContact;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +133,8 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
         setContentView(R.layout.activity_user_);
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        SharedPreferences sharedPreferences = getBaseContext().getSharedPreferences("UserPhoneNumber",MODE_PRIVATE);
+        Phone_number = sharedPreferences.getString("phoneNumber"," ");
         currentUser();
         checkEmergencyNumber();
 
@@ -159,7 +161,8 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         requestQueue = Volley.newRequestQueue(this);
 
         FirebaseMessaging.getInstance().subscribeToTopic(userID);
-        FirebaseMessaging.getInstance().subscribeToTopic("Volunteer"+userID);
+        FirebaseMessaging.getInstance().subscribeToTopic(Phone_number);
+
         FloatingActionButton backButton = findViewById(R.id.settings);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -186,6 +189,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                     public void onClick(DialogInterface dialog, int which) {
                         Toast.makeText(getApplicationContext(), "Help is on its way", Toast.LENGTH_SHORT).show();
                         findVolunteers();
+                        sendNotificationToEmergencyContact();
 
                     }
                 });
@@ -276,12 +280,62 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         }
     }
 
-    private void checkEmergencyNumber(){
+    private Boolean checkEmergencyNumber(){
+
+        boolean test = false;
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         emergencyContact = sharedPreferences.getString(getString(R.string.emergency_contact_preference_key),"Not set");
         if(emergencyContact!=null){
             if(emergencyContact.equals("Not set")||emergencyContact.length()!=10){
                 Toast.makeText(this,"Number not set or number format isn't proper",Toast.LENGTH_SHORT).show();
+            }
+            else{
+                test = true;
+            }
+        }
+        return test;
+    }
+    private void sendNotificationToEmergencyContact(){
+        if(checkEmergencyNumber()){
+            JSONObject mainObj = new JSONObject();
+            try {
+                mainObj.put("to", "/topics/"+emergencyContact);
+                JSONObject notificationObject = new JSONObject();
+                notificationObject.put("title", " " + Name + " needs your help");
+                notificationObject.put("body", " Phone Number : "+Phone_number);
+                JSONObject locationData = new JSONObject();
+                locationData.put("Latitude", Latitude);
+                locationData.put("Longitude", Longitude);
+                locationData.put("Key",userID);
+                locationData.put("Sender","DistressSignal");
+
+                mainObj.put("notification", notificationObject);
+                mainObj.put("data", locationData);
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, URL,
+                        mainObj,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }
+                )
+                {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> header = new HashMap<>();
+                        header.put("content-type", "application/json");
+                        header.put("authorization", "key=AIzaSyA-spthIkyVNryk0TVAFUqTvRenjeP3FeI");
+                        return header;
+                    }
+                };
+                requestQueue.add(jsonObjectRequest);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         }
 
