@@ -5,9 +5,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 import androidx.work.Data;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
+import androidx.work.impl.model.Preference;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -22,7 +24,6 @@ import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -118,6 +119,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
     private String volunteerKey,SourceKey;
     private double volunteerLatitude,volunteerLongitude;
+    private String emergencyContact,personalContact;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +134,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         setContentView(R.layout.activity_user_);
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         currentUser();
+        checkEmergencyNumber();
 
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -195,14 +198,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                 builder.show();
             }
         });
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String emergencyContactNumber = preferences.getString(getResources().getString(R.string.emergency_contact_preference_key), " ");
-        if(emergencyContactNumber.length()!=10){
-            boolean result = checkEmergencyNumber(emergencyContactNumber);
-            if(!result) {
-                Toast.makeText(getApplicationContext(), "Invalid emergency Contact length", Toast.LENGTH_SHORT).show();
-            }
-        }
+
 
         Intent intent = getIntent();
         if (intent.hasExtra("DLatitude")) {
@@ -280,18 +276,15 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         }
     }
 
-    private Boolean checkEmergencyNumber(String number){
-        boolean result = true;
-        if(number.length()==10){
-            try{
-                int numbe = Integer.parseInt(number);
-            }catch(NumberFormatException e) {
-                result = false;
-                Log.d("Invalid Phone number",e.getMessage());
+    private void checkEmergencyNumber(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        emergencyContact = sharedPreferences.getString(getString(R.string.emergency_contact_preference_key),"Not set");
+        if(emergencyContact!=null){
+            if(emergencyContact.equals("Not set")||emergencyContact.length()!=10){
+                Toast.makeText(this,"Number not set or number format isn't proper",Toast.LENGTH_SHORT).show();
             }
         }
 
-        return result;
     }
 
     private void startLocationWorker() {
