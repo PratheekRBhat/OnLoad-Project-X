@@ -135,6 +135,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         SharedPreferences sharedPreferences = getBaseContext().getSharedPreferences("UserPhoneNumber",MODE_PRIVATE);
         Phone_number = sharedPreferences.getString("phoneNumber"," ");
+//        Toast.makeText(this,""+Phone_number,Toast.LENGTH_LONG).show();
         currentUser();
         checkEmergencyNumber();
 
@@ -161,7 +162,10 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         requestQueue = Volley.newRequestQueue(this);
 
         FirebaseMessaging.getInstance().subscribeToTopic(userID);
-        FirebaseMessaging.getInstance().subscribeToTopic(Phone_number);
+
+            FirebaseMessaging.getInstance().subscribeToTopic(Phone_number);
+
+
 
         FloatingActionButton backButton = findViewById(R.id.settings);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -171,7 +175,8 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                 startActivity(intent);
             }
         });
-        Button AttendingButton = findViewById(R.id.Atteniding_button);
+        Button AttendingButton = findViewById(R.id.Attending_button);
+
 
         vname = findViewById(R.id.Volunteer_name);
         vphone = findViewById(R.id.Volunteer_phone);
@@ -189,7 +194,8 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                     public void onClick(DialogInterface dialog, int which) {
                         Toast.makeText(getApplicationContext(), "Help is on its way", Toast.LENGTH_SHORT).show();
                         findVolunteers();
-                        sendNotificationToEmergencyContact();
+                        //sendNotificationToEmergencyContact();
+
 
                     }
                 });
@@ -211,19 +217,30 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             SourceKey = intent.getStringExtra("Skey");
             String notificationSender = intent.getStringExtra("Sender");
             helping = true;
-           if(notificationSender.equals("DistressSignal")){
-               AttendingButton.setVisibility(View.VISIBLE);
-               AttendingButton.setOnClickListener(new View.OnClickListener() {
-                   @Override
-                   public void onClick(View v) {
-                       sendAttendingNotification(SourceKey);
-                   }
-               });
-           }
-           else if(notificationSender.equals("Volunteer")){
-               createDistressSignalLocationOnMap(destinationLatitude,destinationLongitude);
+            switch (notificationSender) {
+                case "DistressSignal":
+                    AttendingButton.setVisibility(View.VISIBLE);
+                    AttendingButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            sendAttendingNotification(SourceKey);
+                        }
+                    });
+                    break;
+                case "Volunteer":
+                    createDistressSignalLocationOnMap(destinationLatitude, destinationLongitude);
 
-           }
+                    break;
+                case "emergencyContact":
+                    AttendingButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            sendAttendingNotification(SourceKey);
+                        }
+                    });
+
+                    break;
+            }
 
         }
         WorkManager.getInstance(this).cancelAllWork();
@@ -291,55 +308,57 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             }
             else{
                 test = true;
+                Toast.makeText(this,""+emergencyContact,Toast.LENGTH_SHORT).show();
             }
         }
         return test;
     }
-    private void sendNotificationToEmergencyContact(){
-        if(checkEmergencyNumber()){
-            JSONObject mainObj = new JSONObject();
-            try {
-                mainObj.put("to", "/topics/"+emergencyContact);
-                JSONObject notificationObject = new JSONObject();
-                notificationObject.put("title", " " + Name + " needs your help");
-                notificationObject.put("body", " Phone Number : "+Phone_number);
-                JSONObject locationData = new JSONObject();
-                locationData.put("Latitude", Latitude);
-                locationData.put("Longitude", Longitude);
-                locationData.put("Key",userID);
-                locationData.put("Sender","DistressSignal");
-
-                mainObj.put("notification", notificationObject);
-                mainObj.put("data", locationData);
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, URL,
-                        mainObj,
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                    }
-                }
-                )
-                {
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        Map<String, String> header = new HashMap<>();
-                        header.put("content-type", "application/json");
-                        header.put("authorization", "key=AIzaSyA-spthIkyVNryk0TVAFUqTvRenjeP3FeI");
-                        return header;
-                    }
-                };
-                requestQueue.add(jsonObjectRequest);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
+//    private void sendNotificationToEmergencyContact(){
+//
+//        if(checkEmergencyNumber()){
+//            JSONObject mainObj = new JSONObject();
+//            try {
+//                mainObj.put("to", "/topics/"+emergencyContact);
+//                JSONObject notificationObject = new JSONObject();
+//                notificationObject.put("title", " " + Name + " needs your help");
+//                notificationObject.put("body", " Phone Number : "+Phone_number);
+//                JSONObject locationData = new JSONObject();
+//                locationData.put("Latitude", Latitude);
+//                locationData.put("Longitude", Longitude);
+//                locationData.put("Key",userID);
+//                locationData.put("Sender","emergencyContact");
+//
+//                mainObj.put("notification", notificationObject);
+//                mainObj.put("data", locationData);
+//                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, URL,
+//                        mainObj,
+//                        new Response.Listener<JSONObject>() {
+//                            @Override
+//                            public void onResponse(JSONObject response) {
+//                            }
+//                        }, new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//
+//                    }
+//                }
+//                )
+//                {
+//                    @Override
+//                    public Map<String, String> getHeaders() throws AuthFailureError {
+//                        Map<String, String> header = new HashMap<>();
+//                        header.put("content-type", "application/json");
+//                        header.put("authorization", "key=AIzaSyA-spthIkyVNryk0TVAFUqTvRenjeP3FeI");
+//                        return header;
+//                    }
+//                };
+//                requestQueue.add(jsonObjectRequest);
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//    }
 
     private void startLocationWorker() {
         Data workerData = new Data.Builder().putString("uid", userID).build();

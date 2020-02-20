@@ -13,7 +13,7 @@ import android.media.AudioAttributes;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Vibrator;
-import android.provider.Settings;
+
 
 
 import androidx.annotation.NonNull;
@@ -66,6 +66,9 @@ public class myFirebaseMessagingService extends FirebaseMessagingService {
         }
         else if(notificationSender!=null && notificationSender.equals("Volunteer")){
             intent.putExtra("Sender","Volunteer");
+        }
+        else if(notificationSender!=null && notificationSender.equals("emergencyContact")){
+            intent.putExtra("Sender","emergencyContact");
         }
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
