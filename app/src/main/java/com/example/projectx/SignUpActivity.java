@@ -84,12 +84,6 @@ public class SignUpActivity extends AppCompatActivity {
                     int selectedId = genderRG.getCheckedRadioButtonId();
                     RadioButton selectedRadioButton = findViewById(selectedId);
                     gender = selectedRadioButton.getText().toString();
-                    SharedPreferences sharedPreferences = getBaseContext().getSharedPreferences("UserPhoneNumber",MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("phoneNumber",phone);
-                    editor.apply();
-
-
                     mAuth.createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                 @Override
@@ -103,7 +97,6 @@ public class SignUpActivity extends AppCompatActivity {
                                         use.setEmail(email);
                                         use.setName(name);
                                         use.setPhone(phone);
-
                                         use.setPassword(password);
                                         use.setGender(gender);
 

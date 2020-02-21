@@ -117,9 +117,10 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     private TextView vname,vphone;
     private ImageButton callButton;
 
-    private String volunteerKey,SourceKey;
+    private String volunteerKey;
+    private String SourceKey;
     private double volunteerLatitude,volunteerLongitude;
-    private String emergencyContact;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,9 +134,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
         setContentView(R.layout.activity_user_);
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        SharedPreferences sharedPreferences = getBaseContext().getSharedPreferences("UserPhoneNumber",MODE_PRIVATE);
-        Phone_number = sharedPreferences.getString("phoneNumber"," ");
-//        Toast.makeText(this,""+Phone_number,Toast.LENGTH_LONG).show();
         currentUser();
         checkEmergencyNumber();
 
@@ -163,10 +161,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
         FirebaseMessaging.getInstance().subscribeToTopic(userID);
 
-            FirebaseMessaging.getInstance().subscribeToTopic(Phone_number);
-
-
-
         FloatingActionButton backButton = findViewById(R.id.settings);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,7 +170,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             }
         });
         Button AttendingButton = findViewById(R.id.Attending_button);
-
 
         vname = findViewById(R.id.Volunteer_name);
         vphone = findViewById(R.id.Volunteer_phone);
@@ -194,7 +187,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                     public void onClick(DialogInterface dialog, int which) {
                         Toast.makeText(getApplicationContext(), "Help is on its way", Toast.LENGTH_SHORT).show();
                         findVolunteers();
-                        //sendNotificationToEmergencyContact();
 
 
                     }
@@ -229,17 +221,8 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                     break;
                 case "Volunteer":
                     createDistressSignalLocationOnMap(destinationLatitude, destinationLongitude);
-
                     break;
-                case "emergencyContact":
-                    AttendingButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            sendAttendingNotification(SourceKey);
-                        }
-                    });
 
-                    break;
             }
 
         }
@@ -297,68 +280,17 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         }
     }
 
-    private Boolean checkEmergencyNumber(){
+    private void checkEmergencyNumber(){
 
-        boolean test = false;
+
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        emergencyContact = sharedPreferences.getString(getString(R.string.emergency_contact_preference_key),"Not set");
-        if(emergencyContact!=null){
-            if(emergencyContact.equals("Not set")||emergencyContact.length()!=10){
-                Toast.makeText(this,"Number not set or number format isn't proper",Toast.LENGTH_SHORT).show();
-            }
-            else{
-                test = true;
-                Toast.makeText(this,""+emergencyContact,Toast.LENGTH_SHORT).show();
+        String emergencyContact = sharedPreferences.getString(getString(R.string.emergency_contact_preference_key), "Not set");
+        if(emergencyContact !=null){
+            if(emergencyContact.equals("Not set")|| emergencyContact.length()!=10) {
+                Toast.makeText(this, "Number not set or number format isn't proper", Toast.LENGTH_SHORT).show();
             }
         }
-        return test;
     }
-//    private void sendNotificationToEmergencyContact(){
-//
-//        if(checkEmergencyNumber()){
-//            JSONObject mainObj = new JSONObject();
-//            try {
-//                mainObj.put("to", "/topics/"+emergencyContact);
-//                JSONObject notificationObject = new JSONObject();
-//                notificationObject.put("title", " " + Name + " needs your help");
-//                notificationObject.put("body", " Phone Number : "+Phone_number);
-//                JSONObject locationData = new JSONObject();
-//                locationData.put("Latitude", Latitude);
-//                locationData.put("Longitude", Longitude);
-//                locationData.put("Key",userID);
-//                locationData.put("Sender","emergencyContact");
-//
-//                mainObj.put("notification", notificationObject);
-//                mainObj.put("data", locationData);
-//                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, URL,
-//                        mainObj,
-//                        new Response.Listener<JSONObject>() {
-//                            @Override
-//                            public void onResponse(JSONObject response) {
-//                            }
-//                        }, new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//
-//                    }
-//                }
-//                )
-//                {
-//                    @Override
-//                    public Map<String, String> getHeaders() throws AuthFailureError {
-//                        Map<String, String> header = new HashMap<>();
-//                        header.put("content-type", "application/json");
-//                        header.put("authorization", "key=AIzaSyA-spthIkyVNryk0TVAFUqTvRenjeP3FeI");
-//                        return header;
-//                    }
-//                };
-//                requestQueue.add(jsonObjectRequest);
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//    }
 
     private void startLocationWorker() {
         Data workerData = new Data.Builder().putString("uid", userID).build();

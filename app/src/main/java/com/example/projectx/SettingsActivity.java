@@ -1,7 +1,11 @@
 package com.example.projectx;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -36,6 +40,8 @@ public class SettingsActivity extends AppCompatActivity  {
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        final String emergencyContact = sharedPreferences.getString(getString(R.string.emergency_contact_preference_key), "Not set");
 
         FloatingActionButton backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -55,6 +61,16 @@ public class SettingsActivity extends AppCompatActivity  {
                 Intent intent = new Intent(SettingsActivity.this, LandingPageActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
+            }
+        });
+
+        TextView callEmergencyContact = findViewById(R.id.callEmergencyContact);
+        callEmergencyContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                callIntent.setData(Uri.parse("tel:"+emergencyContact));
+                startActivity(callIntent);
             }
         });
     }

@@ -51,12 +51,6 @@ public class myFirebaseMessagingService extends FirebaseMessagingService {
                 .setSound(soundUri);
 
 
-
-
-
-
-
-
         Intent intent = new Intent(this, User_Activity.class);
         intent.putExtra("DLatitude", DestinationLatitude);
         intent.putExtra("DLongitude", DestinationLongitude);
@@ -66,9 +60,6 @@ public class myFirebaseMessagingService extends FirebaseMessagingService {
         }
         else if(notificationSender!=null && notificationSender.equals("Volunteer")){
             intent.putExtra("Sender","Volunteer");
-        }
-        else if(notificationSender!=null && notificationSender.equals("emergencyContact")){
-            intent.putExtra("Sender","emergencyContact");
         }
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 

@@ -49,6 +49,16 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/callEmergencyContact"
+        android:paddingTop="25dp"
+        android:paddingBottom="25dp"
+        android:paddingStart="75dp"
+        android:text="@string/call_emergency_contact"
+        android:textColor="#000000"
+        tools:ignore="RtlSymmetry" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/signOut"
         android:text="@string/sign_out"
         android:paddingTop="25dp"

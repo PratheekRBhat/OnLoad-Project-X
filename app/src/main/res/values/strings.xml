@@ -34,6 +34,7 @@
     <string name="emergency_contact_preference_key">EmergencyContact</string>
     <string name="greeting">Nice to see you again!</string>
     <string name="contactNumber"> </string>
+    <string name="call_emergency_contact">Call emergency Contact</string>
 
 
 </resources>
