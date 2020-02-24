@@ -49,7 +49,6 @@ public class LandingPageActivity extends AppCompatActivity {
 
 
     private FirebaseAuth mAuth;
-
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean mLocationPermissionGranted;
 
