@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
+import androidx.viewpager.widget.ViewPager;
 import androidx.work.Data;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
@@ -121,6 +122,9 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     private String SourceKey;
     private double volunteerLatitude,volunteerLongitude;
 
+    private ViewPager viewPager;
+    private VolunteersFragmentCollectionAdapter adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -231,7 +235,9 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             startLocationWorker();
         }
 
-
+//        viewPager = findViewById(R.id.pager);
+//        adapter = new VolunteersFragmentCollectionAdapter(getSupportFragmentManager());
+//        viewPager.setAdapter(adapter);
     }
 
     private void sendAttendingNotification(String SKey) {
