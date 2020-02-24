@@ -3,7 +3,6 @@ package com.example.projectx;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -89,8 +88,7 @@ public class SignUpActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
-                                        // Sign in success, update UI with the signed-in user's information
-                                        Log.d(TAG, "createUserWithEmail:success");
+
                                         FirebaseUser user = mAuth.getCurrentUser();
 
                                         Users use = new Users();
@@ -99,7 +97,6 @@ public class SignUpActivity extends AppCompatActivity {
                                         use.setPhone(phone);
                                         use.setPassword(password);
                                         use.setGender(gender);
-
                                         users.child(user.getUid()).setValue(use).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
@@ -109,7 +106,6 @@ public class SignUpActivity extends AppCompatActivity {
 
                                         updateUI(user);
                                     } else {
-                                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
                                         Toast.makeText(SignUpActivity.this, "Authentication failed.",
                                                 Toast.LENGTH_SHORT).show();
                                         updateUI(null);

@@ -19,7 +19,7 @@
     <string name="gender">GENDER</string>
     <string name="hint_phone">10 DIGIT PHONE NUMBER</string>
     <string name="login">LOGIN</string>
-    <string name="i_m_going">I\'m Going</string>
+    <string name="i_m_going">I am  Going</string>
     <string name="help">SEND DISTRESS SIGNAL</string>
     <string name="sign_out">Sign Out</string>
     <string name="new_user_sign_up">New User? Sign Up</string>
@@ -33,7 +33,6 @@
     <string name="set_your_emergency_contact_here">Set your emergency contact here</string>
     <string name="emergency_contact_preference_key">EmergencyContact</string>
     <string name="greeting">Nice to see you again!</string>
-    <string name="contactNumber"> </string>
     <string name="call_emergency_contact">Call emergency Contact</string>
 
     <!-- TODO: Remove or change this placeholder text -->

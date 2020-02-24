@@ -77,7 +77,6 @@ public class LoginInActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         FirebaseUser user = mAuth.getCurrentUser();
                                         waitingDialog.dismiss();
-
                                         updateUI(user);
                                     } else {
                                         Toast.makeText(LoginInActivity.this, "Authentication failed.",

@@ -79,7 +79,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
+
 import java.util.concurrent.TimeUnit;
 
 
@@ -324,7 +324,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                     volunteerKey = key;
                     volunteerLatitude = location.latitude;
                     volunteerLongitude = location.longitude;
-                    Log.v("foundVolunteer","lat:"+volunteerLatitude+" long:"+volunteerLongitude);
+
 
                     notifiedVolunteerGeoFire.setLocation(volunteerKey,new GeoLocation(volunteerLatitude,volunteerLongitude));
                     findVolunteerGeoFire.removeLocation(volunteerKey);
@@ -358,7 +358,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                     volunteerKey = key;
                     volunteerLatitude = location.latitude;
                     volunteerLongitude = location.longitude;
-                    Log.v("removedVolunteer","lat:"+volunteerLatitude+" long:"+volunteerLongitude);
+
                     findVolunteerGeoFire.setLocation(volunteerKey,new GeoLocation(volunteerLatitude,volunteerLongitude));
                     notifiedVolunteerGeoFire.removeLocation(volunteerKey);
 
@@ -393,7 +393,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
                             volunteerFoundID[noOfVolunteers] = key;
                             noOfVolunteers++;
-                            Log.v("volunteer",key+" "+radius);
+
 
                             addNotifiedVolunteer(key);
                             sendNotification(key,Latitude,Longitude);
@@ -500,8 +500,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                                 writeToFirebaseDatabase(Latitude, Longitude);
                             }
                         } else {
-                            Log.d(TAG, "Current location is null. Using defaults.");
-                            Log.e(TAG, "Exception: %s", task.getException());
                             mMap.moveCamera(CameraUpdateFactory
                                     .newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
                             LatLng sydney = new LatLng(-Latitude, Longitude);
@@ -514,16 +512,12 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
             }
         } catch (SecurityException e) {
-            Log.e("Exception: %s", Objects.requireNonNull(e.getMessage()));
+            e.printStackTrace();
         }
     }
 
     private void getLocationPermission() {
-        /*
-         * Request location permission, so that we can get the location of the
-         * device. The result of the permission request is handled by a callback,
-         * onRequestPermissionsResult.
-         */
+
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this.getApplicationContext(),
@@ -571,7 +565,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                 getLocationPermission();
             }
         } catch (SecurityException e) {
-            Log.e("Exception: %s", Objects.requireNonNull(e.getMessage()));
+            e.printStackTrace();
         }
     }
 
@@ -662,7 +656,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 VName = dataSnapshot.child("name").getValue(String.class);
                 Vphone = dataSnapshot.child("phone").getValue(String.class);
-                Log.v(TAG," "+VName+"/"+Vphone);
+
 
                 callLayout.setVisibility(View.VISIBLE);
                 vname.setText(VName);
@@ -764,10 +758,10 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                     MapStyleOptions.loadRawResourceStyle(
                             this, R.raw.map_style));
             if (!success) {
-                Log.e(TAG, "Style parsing failed.");
+
             }
         } catch (Resources.NotFoundException e) {
-            Log.e(TAG, "Can't find style. Error: ", e);
+            e.printStackTrace();
         }
     }
     @Override
