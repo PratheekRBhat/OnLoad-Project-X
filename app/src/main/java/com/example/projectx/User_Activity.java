@@ -151,7 +151,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
         distressSignalButton = findViewById(R.id.DistressSignal);
         final LinearLayout linearLayout = findViewById(R.id.mapLayout);
-        callLayout = findViewById(R.id.call);
+
         loader = findViewById(R.id.loader);
 
         linearLayout.setVisibility(View.VISIBLE);
@@ -652,17 +652,17 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                 Vphone = dataSnapshot.child("phone").getValue(String.class);
 
 
-                callLayout.setVisibility(View.VISIBLE);
-                vname.setText(VName);
-                vphone.setText(Vphone);
-                callButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent callIntent = new Intent(Intent.ACTION_DIAL);
-                        callIntent.setData(Uri.parse("tel:"+Vphone));
-                        startActivity(callIntent);
-                    }
-                });
+//                callLayout.setVisibility(View.VISIBLE);
+//                vname.setText(VName);
+//                vphone.setText(Vphone);
+//                callButton.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Intent callIntent = new Intent(Intent.ACTION_DIAL);
+//                        callIntent.setData(Uri.parse("tel:"+Vphone));
+//                        startActivity(callIntent);
+//                    }
+//                });
 
             }
 
