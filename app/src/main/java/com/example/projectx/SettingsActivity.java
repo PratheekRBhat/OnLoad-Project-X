@@ -42,7 +42,14 @@ public class SettingsActivity extends AppCompatActivity  {
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         final String emergencyContact = sharedPreferences.getString(getString(R.string.emergency_contact_preference_key), "Not set");
-
+        TextView complaintTV = findViewById(R.id.complaintTV);
+        complaintTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SettingsActivity.this,complaintRegisterActivity.class);
+                startActivity(intent);
+            }
+        });
         FloatingActionButton backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override

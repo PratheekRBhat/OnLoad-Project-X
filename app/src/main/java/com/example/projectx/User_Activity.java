@@ -24,7 +24,7 @@ import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.util.Log;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -652,17 +652,17 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                 Vphone = dataSnapshot.child("phone").getValue(String.class);
 
 
-//                callLayout.setVisibility(View.VISIBLE);
-//                vname.setText(VName);
-//                vphone.setText(Vphone);
-//                callButton.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        Intent callIntent = new Intent(Intent.ACTION_DIAL);
-//                        callIntent.setData(Uri.parse("tel:"+Vphone));
-//                        startActivity(callIntent);
-//                    }
-//                });
+                callLayout.setVisibility(View.VISIBLE);
+                vname.setText(VName);
+                vphone.setText(Vphone);
+                callButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                        callIntent.setData(Uri.parse("tel:"+Vphone));
+                        startActivity(callIntent);
+                    }
+                });
 
             }
 

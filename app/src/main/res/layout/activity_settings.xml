@@ -6,9 +6,7 @@
     tools:context=".SettingsActivity"
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/settings_screen"
-
-    >
+    android:background="@drawable/settings_screen">
     <FrameLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
@@ -49,6 +47,19 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="25dp"
+        android:paddingBottom="25dp"
+        android:paddingStart="75dp"
+        android:id="@+id/complaintTV"
+        android:text="@string/register_your_complaint"
+        android:textColor="#000"
+        tools:ignore="RtlSymmetry"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/callEmergencyContact"
         android:paddingTop="25dp"
         android:paddingBottom="25dp"
@@ -69,6 +80,7 @@
         android:textColor="#00000f"
         tools:ignore="RtlSymmetry"
         android:focusable="true" />
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
