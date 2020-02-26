@@ -28,6 +28,7 @@ import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -114,6 +115,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     private Polyline currentPolyline;
 
     public int noOfVolunteers = 0;
+    private HorizontalScrollView horizontalScrollView;
     private RelativeLayout callLayout;
     private TextView vname,vphone;
     private ImageButton callButton;
@@ -121,9 +123,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     private String volunteerKey;
     private String SourceKey;
     private double volunteerLatitude,volunteerLongitude;
-
-    private ViewPager viewPager;
-    private VolunteersFragmentCollectionAdapter adapter;
 
 
     @Override
@@ -155,7 +154,8 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
         distressSignalButton = findViewById(R.id.DistressSignal);
         final LinearLayout linearLayout = findViewById(R.id.mapLayout);
-        callLayout = findViewById(R.id.call);
+        horizontalScrollView = findViewById(R.id.hsv);
+        callLayout = findViewById(R.id.call1);
         loader = findViewById(R.id.loader);
 
         linearLayout.setVisibility(View.VISIBLE);
@@ -175,10 +175,10 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         });
         Button AttendingButton = findViewById(R.id.Attending_button);
 
-        vname = findViewById(R.id.Volunteer_name);
-        vphone = findViewById(R.id.Volunteer_phone);
+        vname = findViewById(R.id.Volunteer_name1);
+        vphone = findViewById(R.id.Volunteer_phone1);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        callButton = findViewById(R.id.callButton);
+        callButton = findViewById(R.id.callButton1);
         distressSignalButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -235,9 +235,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             startLocationWorker();
         }
 
-//        viewPager = findViewById(R.id.pager);
-//        adapter = new VolunteersFragmentCollectionAdapter(getSupportFragmentManager());
-//        viewPager.setAdapter(adapter);
     }
 
     private void sendAttendingNotification(String SKey) {
@@ -658,6 +655,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                 Vphone = dataSnapshot.child("phone").getValue(String.class);
 
 
+                horizontalScrollView.setVisibility(View.VISIBLE);
                 callLayout.setVisibility(View.VISIBLE);
                 vname.setText(VName);
                 vphone.setText(Vphone);
