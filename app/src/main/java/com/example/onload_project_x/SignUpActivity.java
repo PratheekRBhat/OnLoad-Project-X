@@ -3,6 +3,7 @@ package com.example.onload_project_x;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.AuthResult;
@@ -80,8 +82,24 @@ public class SignUpActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if(task.isSuccessful()){
-                                        FirebaseUser user = mAuth.getCurrentUser();
-
+                                        final FirebaseUser user = mAuth.getCurrentUser();
+                                        User use = new User();
+                                        use.setEmail(email);
+                                        use.setName(name);
+                                        use.setPhone(number);
+                                        use.setPassword(password);
+                                        use.setGender(gender);
+                                        users.child(user.getUid()).setValue(use).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                updateUi(user);
+                                            }
+                                        });
+                                    }
+                                    else {
+                                        Toast.makeText(SignUpActivity.this, "Authentication failed.",
+                                                Toast.LENGTH_SHORT).show();
+                                        updateUi(null);
                                     }
                                 }
                             });
@@ -89,5 +107,12 @@ public class SignUpActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void updateUi(FirebaseUser user) {
+        if(user!=null){
+            Intent intent = new Intent(SignUpActivity.this, UserActivity.class);
+            startActivity(intent);
+        }
     }
 }
