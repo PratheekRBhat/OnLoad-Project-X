@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/settings_screen"
     tools:context=".UserActivity">
 
     <RelativeLayout
