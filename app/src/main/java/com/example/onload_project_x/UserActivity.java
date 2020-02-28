@@ -1,5 +1,6 @@
 package com.example.onload_project_x;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 
 import android.os.Bundle;
@@ -11,7 +12,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class UserActivity extends FragmentActivity implements OnMapReadyCallback {
+public class UserActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
 
