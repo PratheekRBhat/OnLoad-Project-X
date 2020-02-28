@@ -35,10 +35,10 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-        mAuth=FirebaseAuth.getInstance();
-        FirebaseDatabase database =FirebaseDatabase.getInstance();
-        users=database.getReference("Users");
-        emailET=findViewById(R.id.emailET);
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        users = database.getReference("Users");
+        emailET = findViewById(R.id.emailET);
         nameET = findViewById(R.id.namET);
         numberET = findViewById(R.id.phone_ET);
         passwordET = findViewById(R.id.passwordET);
@@ -54,26 +54,24 @@ public class SignUpActivity extends AppCompatActivity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(TextUtils.isEmpty(emailET.getText().toString())){
+                if (TextUtils.isEmpty(emailET.getText().toString())) {
                     Toast.makeText(getApplicationContext(), "Enter Valid Email", Toast.LENGTH_SHORT).show();
-                }
-                else  if(TextUtils.isEmpty(nameET.getText().toString())){
+                } else if (TextUtils.isEmpty(nameET.getText().toString())) {
                     Toast.makeText(getApplicationContext(), "Enter Valid Name", Toast.LENGTH_SHORT).show();
-                }
-                else if(numberET.getText().toString().length() != 10){
+                } else if (numberET.getText().toString().length() != 10) {
                     Toast.makeText(getApplicationContext(), "Enter Valid Phone Number", Toast.LENGTH_SHORT).show();
-                }
-                else if(passwordET.getText().toString().length()!=6){
+                } else if (passwordET.getText().toString().length() != 6) {
                     Toast.makeText(getApplicationContext(), "Enter Valid Password", Toast.LENGTH_SHORT).show();
-                }
-                else if(genderRG.getCheckedRadioButtonId()==-1){
+                } else if (genderRG.getCheckedRadioButtonId() == -1) {
                     Toast.makeText(getApplicationContext(), "Please Select Your Gender", Toast.LENGTH_SHORT).show();
-                }
-                else{
+                } else {
+
+
                     email = emailET.getText().toString();
                     name = nameET.getText().toString();
                     password = passwordET.getText().toString();
                     number = numberET.getText().toString();
+
                     int selectedID = genderRG.getCheckedRadioButtonId();
                     RadioButton selectedRadioButton = findViewById(selectedID);
                     gender = selectedRadioButton.getText().toString();
@@ -81,7 +79,7 @@ public class SignUpActivity extends AppCompatActivity {
                             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if(task.isSuccessful()){
+                                    if (task.isSuccessful()) {
                                         final FirebaseUser user = mAuth.getCurrentUser();
                                         User use = new User();
                                         use.setEmail(email);
@@ -95,8 +93,7 @@ public class SignUpActivity extends AppCompatActivity {
                                                 updateUi(user);
                                             }
                                         });
-                                    }
-                                    else {
+                                    } else {
                                         Toast.makeText(SignUpActivity.this, "Authentication failed.",
                                                 Toast.LENGTH_SHORT).show();
                                         updateUi(null);
@@ -110,7 +107,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void updateUi(FirebaseUser user) {
-        if(user!=null){
+        if (user != null) {
             Intent intent = new Intent(SignUpActivity.this, UserActivity.class);
             startActivity(intent);
         }
