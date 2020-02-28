@@ -1,0 +1,48 @@
+<resources>
+    <string name="app_name">OnLoad Project-X</string>
+    <string name="name_hint">NAME</string>
+    <string name="password">PASSWORD</string>
+    <string name="logo">logo</string>
+    <string name="password_hint">PASSWORD</string>
+    <string name="signIN">Sign in</string>
+    <string name="signUp">Sign Up</string>
+    <string name="slogan">Humanizing the world</string>
+    <string name="volunteer_login">VOLUNTEER LOGIN</string>
+    <string name="background">background</string>
+    <string name="hint_email">EMAIL</string>
+    <string name="hint_name">NAME</string>
+    <string name="hint_password">PASSWORD</string>
+    <string name="hint_Cpassword">CONFIRM PASSWORD</string>
+    <string name="FEMALE">FEMALE</string>
+    <string name="MALE">MALE</string>
+    <string name="Submit">SUBMIT</string>
+    <string name="gender">GENDER</string>
+    <string name="hint_phone">10 DIGIT PHONE NUMBER</string>
+    <string name="login">LOGIN</string>
+    <string name="i_m_going">I am  Going</string>
+    <string name="help">SEND DISTRESS SIGNAL</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="new_user_sign_up">New User? Sign Up</string>
+    <string name="Name">Name</string>
+    <string name="Phone_number">Phone_Number</string>
+    <string name="call_button">call_button</string>
+    <string name="settings">Settings</string>
+    <string name="backbutton">backButton</string>
+    <string name="title_activity_preference_settings">Settings</string>
+    <string name="emergency_contact">Emergency Contact</string>
+    <string name="set_your_emergency_contact_here">Set your emergency contact here</string>
+    <string name="emergency_contact_preference_key">EmergencyContact</string>
+    <string name="greeting">Nice to see you again!</string>
+    <string name="call_emergency_contact">Call emergency Contact</string>
+    <string name="register_your_complaint">Register your complaint</string>
+    <string name="complaint_registration">Complaint Registration</string>
+    <string name="describe_the_crime">Describe the crime</string>
+    <string name="enter_your_address">Enter your Address</string>
+    <string-array name="complaints">
+        <item> </item>
+        <item>Domestic Violence</item>
+        <item>Cyber Crime</item>
+        <item>Dowry</item>
+        <item>Stalking</item>
+    </string-array>
+</resources>
