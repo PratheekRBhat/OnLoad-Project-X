@@ -12,7 +12,6 @@
     <string name="hint_email">EMAIL</string>
     <string name="hint_name">NAME</string>
     <string name="hint_password">PASSWORD</string>
-    <string name="hint_Cpassword">CONFIRM PASSWORD</string>
     <string name="FEMALE">FEMALE</string>
     <string name="MALE">MALE</string>
     <string name="Submit">SUBMIT</string>
@@ -24,7 +23,7 @@
     <string name="sign_out">Sign Out</string>
     <string name="new_user_sign_up">New User? Sign Up</string>
     <string name="Name">Name</string>
-    <string name="Phone_number">Phone_Number</string>
+    <string name="Phone_number">Phone Number</string>
     <string name="call_button">call_button</string>
     <string name="settings">Settings</string>
     <string name="backbutton">backButton</string>
@@ -46,4 +45,8 @@
         <item>Stalking</item>
     </string-array>
     <string name="title_activity_user">Map</string>
+    <string name="project_x">PROJECT-X</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
