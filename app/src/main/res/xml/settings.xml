@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:defaultValue=" "
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:title="@string/emergency_contact"
+        android:key="@string/emergency_contact_preference_key"
+        app:useSimpleSummaryProvider="true"
+        />
+
+</PreferenceScreen>
