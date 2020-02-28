@@ -38,7 +38,9 @@
 
         <activity
             android:name=".UserActivity"
-            android:label="@string/title_activity_user"></activity>
+            android:label="@string/title_activity_user"
+            android:launchMode="singleTop"
+            />
         <activity android:name=".LoginInActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".MainActivity">

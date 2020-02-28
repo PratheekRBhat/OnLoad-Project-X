@@ -38,10 +38,10 @@ public class SignUpActivity extends AppCompatActivity {
         mAuth=FirebaseAuth.getInstance();
         FirebaseDatabase database =FirebaseDatabase.getInstance();
         users=database.getReference("Users");
-        emailET=findViewById(R.id.email_CV);
-        nameET = findViewById(R.id.name_CV);
-        numberET = findViewById(R.id.number_cv);
-        passwordET = findViewById(R.id.password_CV);
+        emailET=findViewById(R.id.emailET);
+        nameET = findViewById(R.id.namET);
+        numberET = findViewById(R.id.phone_ET);
+        passwordET = findViewById(R.id.passwordET);
         genderRG = findViewById(R.id.genderPref);
         TextView submitButton = findViewById(R.id.register_btn);
         FloatingActionButton backButton = findViewById(R.id.signUpBackButton);
@@ -55,25 +55,25 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(TextUtils.isEmpty(emailET.getText().toString())){
-                    Toast.makeText(getApplicationContext(), "Enter Valid Email", Toast.LENGTH_SHORT);
+                    Toast.makeText(getApplicationContext(), "Enter Valid Email", Toast.LENGTH_SHORT).show();
                 }
                 else  if(TextUtils.isEmpty(nameET.getText().toString())){
-                    Toast.makeText(getApplicationContext(), "Enter Valid Name", Toast.LENGTH_SHORT);
+                    Toast.makeText(getApplicationContext(), "Enter Valid Name", Toast.LENGTH_SHORT).show();
                 }
                 else if(numberET.getText().toString().length() != 10){
-                    Toast.makeText(getApplicationContext(), "Enter Valid Phone Number", Toast.LENGTH_SHORT);
+                    Toast.makeText(getApplicationContext(), "Enter Valid Phone Number", Toast.LENGTH_SHORT).show();
                 }
                 else if(passwordET.getText().toString().length()!=6){
-                    Toast.makeText(getApplicationContext(), "Enter Valid Password", Toast.LENGTH_SHORT);
+                    Toast.makeText(getApplicationContext(), "Enter Valid Password", Toast.LENGTH_SHORT).show();
                 }
                 else if(genderRG.getCheckedRadioButtonId()==-1){
-                    Toast.makeText(getApplicationContext(), "Please Select Your Gender", Toast.LENGTH_SHORT);
+                    Toast.makeText(getApplicationContext(), "Please Select Your Gender", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    emailET.getText().toString();
-                    nameET.getText().toString();
-                    passwordET.getText().toString();
-                    numberET.getText().toString();
+                    email = emailET.getText().toString();
+                    name = nameET.getText().toString();
+                    password = passwordET.getText().toString();
+                    number = numberET.getText().toString();
                     int selectedID = genderRG.getCheckedRadioButtonId();
                     RadioButton selectedRadioButton = findViewById(selectedID);
                     gender = selectedRadioButton.getText().toString();
