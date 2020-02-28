@@ -45,4 +45,5 @@
         <item>Dowry</item>
         <item>Stalking</item>
     </string-array>
+    <string name="title_activity_user">Map</string>
 </resources>
