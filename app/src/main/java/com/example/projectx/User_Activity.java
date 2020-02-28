@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
-import androidx.viewpager.widget.ViewPager;
 import androidx.work.Data;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
@@ -25,10 +24,9 @@ import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.util.Log;
+
 import android.view.View;
 import android.widget.Button;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -115,7 +113,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     private Polyline currentPolyline;
 
     public int noOfVolunteers = 0;
-    private HorizontalScrollView horizontalScrollView;
     private RelativeLayout callLayout;
     private TextView vname,vphone;
     private ImageButton callButton;
@@ -154,8 +151,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
         distressSignalButton = findViewById(R.id.DistressSignal);
         final LinearLayout linearLayout = findViewById(R.id.mapLayout);
-        horizontalScrollView = findViewById(R.id.hsv);
-        callLayout = findViewById(R.id.call1);
+
         loader = findViewById(R.id.loader);
 
         linearLayout.setVisibility(View.VISIBLE);
@@ -175,10 +171,10 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         });
         Button AttendingButton = findViewById(R.id.Attending_button);
 
-        vname = findViewById(R.id.Volunteer_name1);
-        vphone = findViewById(R.id.Volunteer_phone1);
+        vname = findViewById(R.id.Volunteer_name);
+        vphone = findViewById(R.id.Volunteer_phone);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        callButton = findViewById(R.id.callButton1);
+        callButton = findViewById(R.id.callButton);
         distressSignalButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -234,6 +230,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         if (mLocationPermissionGranted) {
             startLocationWorker();
         }
+
 
     }
 
@@ -372,7 +369,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
     }
 
-     void findVolunteers() {
+    void findVolunteers() {
 
         final DatabaseReference findVolunteer = FirebaseDatabase.getInstance().getReference("LocationData");
         final DatabaseReference notifiedVolunteer = FirebaseDatabase.getInstance().getReference("keyFound");
@@ -382,28 +379,28 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         final GeoQuery findVol = geoFire.queryAtLocation(new GeoLocation(Latitude, Longitude), radius);
         findVol.removeAllListeners();
 
-         findVol.addGeoQueryEventListener(new GeoQueryEventListener() {
+        findVol.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
                 if (!volunteerFound && !key.equals(userID)) {
-                        if(noOfVolunteers <= 2){
+                    if(noOfVolunteers <= 2){
 
-                            volunteerFoundID[noOfVolunteers] = key;
-                            noOfVolunteers++;
+                        volunteerFoundID[noOfVolunteers] = key;
+                        noOfVolunteers++;
 
 
-                            addNotifiedVolunteer(key);
-                            sendNotification(key,Latitude,Longitude);
-                            findVolunteers();
+                        addNotifiedVolunteer(key);
+                        sendNotification(key,Latitude,Longitude);
+                        findVolunteers();
 
-                        } else {
+                    } else {
 
-                            for (String K:volunteerFoundID) {
-                                removeNotifiedVolunteer(K);
-                            }
-
-                            volunteerFound = true;
+                        for (String K:volunteerFoundID) {
+                            removeNotifiedVolunteer(K);
                         }
+
+                        volunteerFound = true;
+                    }
                 }
             }
 
@@ -631,19 +628,19 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     private void currentUser(){
 
         DatabaseReference currentUser = FirebaseDatabase.getInstance().getReference("Users").child(userID);
-       currentUser.addValueEventListener(new ValueEventListener() {
-           @Override
-           public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-               Name = dataSnapshot.child("name").getValue(String.class);
-               Phone_number = dataSnapshot.child("phone").getValue(String.class);
+        currentUser.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Name = dataSnapshot.child("name").getValue(String.class);
+                Phone_number = dataSnapshot.child("phone").getValue(String.class);
 
-           }
+            }
 
-           @Override
-           public void onCancelled(@NonNull DatabaseError databaseError) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-           }
-       });
+            }
+        });
     }
 
     private void volunteerDetails(String Key){
@@ -655,7 +652,6 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
                 Vphone = dataSnapshot.child("phone").getValue(String.class);
 
 
-                horizontalScrollView.setVisibility(View.VISIBLE);
                 callLayout.setVisibility(View.VISIBLE);
                 vname.setText(VName);
                 vphone.setText(Vphone);
@@ -771,4 +767,3 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
     }
 
 }
-

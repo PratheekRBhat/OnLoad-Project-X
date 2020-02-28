@@ -34,6 +34,17 @@
     <string name="emergency_contact_preference_key">EmergencyContact</string>
     <string name="greeting">Nice to see you again!</string>
     <string name="call_emergency_contact">Call emergency Contact</string>
+    <string name="register_your_complaint">Register your complaint</string>
+    <string name="complaint_registration">Complaint Registration</string>
+    <string name="describe_the_crime">Describe the crime</string>
+    <string name="enter_your_address">Enter your Address</string>
+    <string-array name="complaints">
+        <item> </item>
+        <item>Domestic Violence</item>
+        <item>Cyber Crime</item>
+        <item>Dowry</item>
+        <item>Stalking</item>
+    </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
