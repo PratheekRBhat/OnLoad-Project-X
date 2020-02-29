@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<<<<<<< HEAD
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 <EditTextPreference
@@ -7,4 +8,15 @@
     android:key="@string/emergency_contact_preference_key"
     app:useSimpleSummaryProvider="true"
     />
+=======
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:defaultValue=" "
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:title="@string/emergency_contact"
+        android:key="@string/emergency_contact_preference_key"
+        app:useSimpleSummaryProvider="true"
+        />
+
+>>>>>>> f36be98e31d0792fce8b37c4e583dfc6b1147d55
 </PreferenceScreen>

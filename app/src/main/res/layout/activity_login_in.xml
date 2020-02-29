@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<<<<<<< HEAD
+=======
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+>>>>>>> f36be98e31d0792fce8b37c4e583dfc6b1147d55
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LoginInActivity"
     android:background="@drawable/settings_screen"
     android:orientation="vertical"
+<<<<<<< HEAD
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
    <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -23,6 +28,22 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     >
+=======
+    >
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:backgroundTint="@color/colorPrimary"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/ic_arrow_back_black_24dp"
+        android:id="@+id/loginPageBackButton"
+        />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+>>>>>>> f36be98e31d0792fce8b37c4e583dfc6b1147d55
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,6 +52,10 @@
             >
 
             <TextView
+<<<<<<< HEAD
+=======
+
+>>>>>>> f36be98e31d0792fce8b37c4e583dfc6b1147d55
                 android:id="@+id/logo"
                 android:layout_width="wrap_content"
                 android:layout_height="150dp"
@@ -56,6 +81,7 @@
 
 
 
+<<<<<<< HEAD
                     <EditText
                         android:id="@+id/login_email"
                         android:layout_width="match_parent"
@@ -73,6 +99,25 @@
                         android:paddingEnd="20dp"
                         tools:ignore="TextFields"
                         android:importantForAutofill="no" />
+=======
+                <EditText
+                    android:id="@+id/login_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@null"
+                    android:hint="@string/hint_email"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:textSize="15sp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    tools:ignore="TextFields"
+                    android:importantForAutofill="no" />
+>>>>>>> f36be98e31d0792fce8b37c4e583dfc6b1147d55
 
 
             </androidx.cardview.widget.CardView>
@@ -88,6 +133,7 @@
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp">
 
+<<<<<<< HEAD
                     <EditText
                         android:id="@+id/login_password"
                         android:layout_width="match_parent"
@@ -105,6 +151,25 @@
                         android:paddingEnd="20dp"
                         tools:ignore="TextFields"
                         android:importantForAutofill="no" />
+=======
+                <EditText
+                    android:id="@+id/login_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@null"
+                    android:hint="@string/hint_password"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:textSize="15sp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    tools:ignore="TextFields"
+                    android:importantForAutofill="no" />
+>>>>>>> f36be98e31d0792fce8b37c4e583dfc6b1147d55
 
             </androidx.cardview.widget.CardView>
 
@@ -154,9 +219,13 @@
 
         </RelativeLayout>
 
+<<<<<<< HEAD
 </ScrollView>
 
 
 
+=======
+    </ScrollView>
+>>>>>>> f36be98e31d0792fce8b37c4e583dfc6b1147d55
 
 </LinearLayout>

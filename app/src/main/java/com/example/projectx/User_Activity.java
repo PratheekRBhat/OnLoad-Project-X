@@ -98,6 +98,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
 
     private Button distressSignalButton;
 
+
     private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
     private static final float DEFAULT_ZOOM = 16;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
@@ -169,7 +170,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
             }
         });
 
-        Button AttendingButton = findViewById(R.id.Attending_button);
+        Button AttendingButton = findViewById(R.id.Attending_Button);
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -665,7 +666,7 @@ public class User_Activity extends AppCompatActivity implements OnMapReadyCallba
         LatLng destination = new LatLng(dLat, dLong);
         LatLng source = new LatLng(Latitude, Longitude);
         String url = getUrl(destination, source);
-        new FetchURL(User_Activity.this).execute(url, "driving");
+        new FetchURL(UserActivity.this).execute(url, "driving");
     }
 
     private String getUrl(LatLng destination, LatLng source) {

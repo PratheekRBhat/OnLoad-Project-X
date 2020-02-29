@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowFullscreen">true</item>
+<<<<<<< HEAD
 
     </style>
 
@@ -24,6 +25,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowFullscreen">true</item>
+=======
+>>>>>>> f36be98e31d0792fce8b37c4e583dfc6b1147d55
     </style>
 
 </resources>

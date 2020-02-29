@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+<<<<<<< HEAD
 
 android {
     compileSdkVersion 28
@@ -13,6 +14,20 @@ android {
         multiDexEnabled true
 
 
+=======
+apply plugin: 'com.google.gms.google-services'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+    defaultConfig {
+        applicationId "com.example.onload_project_x"
+        minSdkVersion 24
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+>>>>>>> f36be98e31d0792fce8b37c4e583dfc6b1147d55
     }
     buildTypes {
         release {
@@ -26,9 +41,19 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+<<<<<<< HEAD
     implementation 'com.google.firebase:firebase-auth:19.2.0'
     implementation 'com.google.firebase:firebase-database:19.2.1'
     implementation 'com.google.firebase:firebase-messaging:20.1.0'
+=======
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    implementation 'com.google.firebase:firebase-auth:19.2.0'
+    implementation 'com.google.firebase:firebase-database:19.2.1'
+    implementation 'com.google.firebase:firebase-messaging:20.1.1'
+>>>>>>> f36be98e31d0792fce8b37c4e583dfc6b1147d55
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
@@ -51,9 +76,13 @@ dependencies {
     implementation 'com.google.maps.android:android-maps-utils:0.5'
     implementation "androidx.preference:preference:1.1.0"
     implementation 'androidx.cardview:cardview:1.0.0'
+<<<<<<< HEAD
     implementation 'com.google.android.gms:play-services-ads:18.3.0'
 
 }
 
 
 apply plugin: 'com.google.gms.google-services'
+=======
+}
+>>>>>>> f36be98e31d0792fce8b37c4e583dfc6b1147d55

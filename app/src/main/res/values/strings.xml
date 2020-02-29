@@ -1,5 +1,9 @@
 <resources>
+<<<<<<< HEAD
     <string name="app_name">PROJECT X</string>
+=======
+    <string name="app_name">OnLoad Project-X</string>
+>>>>>>> f36be98e31d0792fce8b37c4e583dfc6b1147d55
     <string name="name_hint">NAME</string>
     <string name="password">PASSWORD</string>
     <string name="logo">logo</string>
@@ -12,7 +16,10 @@
     <string name="hint_email">EMAIL</string>
     <string name="hint_name">NAME</string>
     <string name="hint_password">PASSWORD</string>
+<<<<<<< HEAD
     <string name="hint_Cpassword">CONFIRM PASSWORD</string>
+=======
+>>>>>>> f36be98e31d0792fce8b37c4e583dfc6b1147d55
     <string name="FEMALE">FEMALE</string>
     <string name="MALE">MALE</string>
     <string name="Submit">SUBMIT</string>
@@ -24,7 +31,11 @@
     <string name="sign_out">Sign Out</string>
     <string name="new_user_sign_up">New User? Sign Up</string>
     <string name="Name">Name</string>
+<<<<<<< HEAD
     <string name="Phone_number">Phone_Number</string>
+=======
+    <string name="Phone_number">Phone Number</string>
+>>>>>>> f36be98e31d0792fce8b37c4e583dfc6b1147d55
     <string name="call_button">call_button</string>
     <string name="settings">Settings</string>
     <string name="backbutton">backButton</string>
@@ -45,9 +56,17 @@
         <item>Dowry</item>
         <item>Stalking</item>
     </string-array>
+<<<<<<< HEAD
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
+=======
+    <string name="title_activity_user">Map</string>
+    <string name="project_x">PROJECT-X</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+>>>>>>> f36be98e31d0792fce8b37c4e583dfc6b1147d55
 </resources>

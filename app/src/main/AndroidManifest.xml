@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+<<<<<<< HEAD
     package="com.example.projectx">
 
+=======
+    package="com.example.onload_project_x">
+    <!--
+         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
+         Google Maps Android API v2, but you must specify either coarse or fine
+         location permissions for the 'MyLocation' functionality.
+    -->
+>>>>>>> f36be98e31d0792fce8b37c4e583dfc6b1147d55
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -12,6 +21,7 @@
     <application
         android:allowBackup="true"
         android:fullBackupContent="true"
+<<<<<<< HEAD
         android:icon="@drawable/finallogo"
         android:label="@string/app_name"
         android:roundIcon="@drawable/finallogo"
@@ -30,11 +40,29 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+=======
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".SettingsActivity"></activity>
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/.
+        -->
+>>>>>>> f36be98e31d0792fce8b37c4e583dfc6b1147d55
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
         <activity
+<<<<<<< HEAD
             android:name=".User_Activity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
@@ -50,12 +78,21 @@
             android:parentActivityName=".LandingPageActivity"
             android:theme="@style/AppTheme" />
         <activity android:name=".LandingPageActivity">
+=======
+            android:name=".UserActivity"
+            android:label="@string/title_activity_user"
+            android:launchMode="singleTop" />
+        <activity android:name=".LoginInActivity" />
+        <activity android:name=".SignUpActivity" />
+        <activity android:name=".MainActivity">
+>>>>>>> f36be98e31d0792fce8b37c4e583dfc6b1147d55
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<<<<<<< HEAD
 
         <service
             android:name=".myFirebaseMessagingService"
@@ -71,6 +108,8 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
+=======
+>>>>>>> f36be98e31d0792fce8b37c4e583dfc6b1147d55
     </application>
 
 </manifest>
