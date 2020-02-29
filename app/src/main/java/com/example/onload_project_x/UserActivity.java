@@ -14,6 +14,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Location;
+import android.location.LocationListener;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -24,6 +25,9 @@ import android.view.View;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryEventListener;
+import com.firebase.geofire.LocationCallback;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -46,7 +50,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.concurrent.TimeUnit;
 
 
-public class UserActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class UserActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
 
 
     private GoogleMap mMap;
@@ -55,6 +59,10 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
     public String Gender, userID;
     private ProgressBar loader;
 
+    private String volunteerKey;
+    private String SourceKey;
+    private double volunteerLatitude,volunteerLongitude;
+
     private boolean mLocationPermissionGranted;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private static final float DEFAULT_ZOOM = 16;
@@ -62,6 +70,9 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int PERMISSION_REQUEST_ACCESS_FINE_LOCATION = 1;
     private double Latitude, Longitude;
     private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
+    private double radius = 0.5;
+    private boolean volunteerFound = false;
+    private int noOfVolunteers = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +102,84 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (mLocationPermissionGranted) {
             startLocationWorker();
         }
+    }
+
+    private void findVolunteers(){
+        final DatabaseReference findVolunteer = FirebaseDatabase.getInstance().getReference("LocationData");
+        final DatabaseReference notifiedVolunteer = FirebaseDatabase.getInstance().getReference("keyFound");
+        final GeoFire geoFire = new GeoFire(findVolunteer);
+        getDeviceLocation();
+        final GeoQuery findVol =geoFire.queryAtLocation(new GeoLocation(Latitude, Longitude), radius);
+        findVol.removeAllListeners();
+
+        findVol.addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+                if (!volunteerFound && !key.equals(userID)){
+                    if (noOfVolunteers <= 2){
+                        noOfVolunteers++;
+
+                        addNotifiedVolunteer(key);
+                        //sendNotification(key, Latitude, Longitude);
+                        findVolunteers();
+                    } else {
+                        volunteerFound = true;
+                    }
+                }
+            }
+
+            @Override
+            public void onKeyExited(String key) {
+
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+                if(!volunteerFound){
+                    radius += 0.1;
+                    findVolunteers();
+                }
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void addNotifiedVolunteer(String key) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("LocationData");
+        DatabaseReference notifiedVolunteer = FirebaseDatabase.getInstance().getReference("keyFound");
+
+        final GeoFire findVolunteerGeoFire = new GeoFire(reference);
+        final GeoFire notifiedVolunteerGeoFire = new GeoFire(notifiedVolunteer);
+
+        findVolunteerGeoFire.getLocation(key, new LocationCallback() {
+            @Override
+            public void onLocationResult(String key, GeoLocation location) {
+                if (location != null){
+                    volunteerKey = key;
+                    volunteerLatitude = location.latitude;
+                    volunteerLongitude = location.longitude;
+
+                    notifiedVolunteerGeoFire.setLocation(key, new GeoLocation(volunteerLatitude, volunteerLongitude));
+                    findVolunteerGeoFire.removeLocation(key);
+                } else {
+                    System.err.println(String.format("There is no location for key %s in GeoFire", key));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.err.println("There was an error getting the GeoFire location: " + databaseError);
+            }
+        });
     }
 
     private void startLocationWorker(){
@@ -235,5 +324,37 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onBackPressed() {
         finishAffinity();
         finish();
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Latitude = location.getLatitude();
+        Longitude = location.getLongitude();
+
+        LatLng source = new LatLng(Latitude, Longitude);
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(source));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(17));
+        updateLocationInRealtime(Latitude, Longitude);
+    }
+
+    private void updateLocationInRealtime(double latitude, double longitude) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("LocationData");
+        GeoFire geoFire = new GeoFire(reference);
+        geoFire.setLocation(userID, new GeoLocation(latitude, longitude));
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
     }
 }
